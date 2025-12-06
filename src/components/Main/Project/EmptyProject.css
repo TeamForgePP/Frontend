@@ -1,0 +1,20 @@
+.emptyProjectContainer{
+    max-width: 100%;
+    height: 150px;
+    border-radius: 20px;
+    background-color: white;
+    margin-top: 15px;
+    box-shadow: var(--main-shadow);
+    position: relative;
+}
+
+.emptyProjectContent{
+    padding: 20px;
+}
+
+.emptyButtonContainer{
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    z-index: 11;
+}

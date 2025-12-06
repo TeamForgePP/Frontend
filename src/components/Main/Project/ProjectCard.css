@@ -1,0 +1,39 @@
+.project_die{
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: var(--main-shadow);
+}
+
+.project_die_info{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.project_die_text{
+    display: flex;
+    gap: 30px;
+}
+
+.status_badge{
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--grey-font);
+    padding: 5px 15px;
+    background-color: #97FFAF;
+    border-radius: 5px;
+
+}
+
+.project_die_actions{
+    display: flex;
+    gap: 15px;
+}
+
+.project_die_main_info{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}

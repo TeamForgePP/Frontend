@@ -1,0 +1,97 @@
+:root {
+    --grey-color: #F3F4F5;
+    --grey-font: #36394A;
+    --main-shadow: 0 -1px 10px 0px rgba(0, 0, 0, 0.11);
+    --purple: #372579;
+    --grey-back:#F0F1F2;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+a{
+    outline: none;
+    text-decoration: none;
+}
+
+
+button{
+    border: none;
+    font-family: "Montserrat", sans-serif; 
+    font-weight: 600; 
+    font-size: 16px;
+    border-radius: 15px;
+    padding: 5px 25px;
+}
+
+h1{
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: black;
+}
+
+h2{
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color:var(--grey-font);
+}
+
+p{
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: black;
+    
+}
+
+p strong{
+    color:var(--grey-font);
+    margin-right: 5px;
+}
+
+textarea{
+    background-color: var(--grey-back);
+    border-radius: 5px;
+    border-style: none;
+
+}
+
+input{
+    background-color: var(--grey-back);
+    border-radius: 5px;
+    border-style: none;
+
+}
+
+.ok_button{
+    color: var(--grey-font);
+    background-color: #E7E7E7;
+}
+
+.bad_button{
+    color: var(--grey-font);
+    background-color: #FFB5B5;
+
+}
+
+.ok_button:hover{
+    background-color: #d5d5d5; 
+}
+
+.bad_button:hover{
+    background-color: #fea3a3;
+}
+
