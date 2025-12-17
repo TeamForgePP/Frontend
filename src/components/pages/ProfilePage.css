@@ -1,0 +1,50 @@
+.profileMainContainer{
+    background-color: var(--grey-back);
+    height: 100vh;
+}
+
+.profileContent{
+    display: flex;
+    position: relative;
+}
+
+.profileImgContainer{
+    background-color: var(--purple);
+    height: 200px;
+    width: 200px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.profileImgContainer img{
+    height: 200px;
+    width: 200px;
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+}
+
+.profileTabs{
+    display: flex;
+    flex-direction: column;
+    right: -20px;
+    top: 0;
+    justify-content: space-between;
+    position: absolute;
+    gap: 120px;
+    height: 80px;
+    width: 80px;
+}
+
+.profileTabs button{
+    background-color: transparent;
+}
+

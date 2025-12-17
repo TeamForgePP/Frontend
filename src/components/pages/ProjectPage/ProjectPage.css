@@ -1,0 +1,14 @@
+.projectHeader{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.projectHeaderBtns{
+    display: flex;
+    gap: 15px;
+}
+
+.reportInf{
+    margin-bottom: 5px;
+}

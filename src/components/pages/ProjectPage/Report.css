@@ -1,0 +1,19 @@
+
+.reportHeader{
+    display: flex;
+    justify-content: space-between ;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    
+}
+
+.reportTitle{
+    margin-bottom: 0;
+}
+
+.reports{
+    background-color: var(--grey-back);
+    border-radius: 40px;
+    padding: 20px;
+}

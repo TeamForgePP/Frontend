@@ -15,7 +15,7 @@ function ProjectCard(){
       }
 
     return(
-      <div className="project_die">
+      <div className="uniInnerSection">
         <div className="project_die_info">
           <div className="project_die_text">
             <h2>TeamForgePP</h2>

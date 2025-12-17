@@ -7,7 +7,7 @@ import './ProjectsSection.css';
 
 function ProjectsSection() {
   return (
-    <section className="projects">
+    <section className="uniSection">
       <ProjectHeader />
       <ProjectCard/>
     </section>

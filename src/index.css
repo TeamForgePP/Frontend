@@ -1,10 +1,11 @@
 :root {
     --grey-color: #F3F4F5;
     --grey-font: #36394A;
-    --main-shadow: 0 -1px 10px 0px rgba(0, 0, 0, 0.11);
+    --main-shadow: 0 -1px 5px 0px rgba(0, 0, 0, 0.11);
     --purple: #372579;
     --grey-back:#F0F1F2;
 }
+
 
 body {
   margin: 0;
@@ -13,6 +14,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
 
 code {

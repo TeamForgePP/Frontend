@@ -2,8 +2,6 @@ import React from "react";
 import "./ComandCard.css"
 import profilImg from '../../../assets/iconoir_profile-circle.svg';
 
-console.log('Image path:', profilImg);
-
 function ComandCard({
     id,
     name = "Иван",

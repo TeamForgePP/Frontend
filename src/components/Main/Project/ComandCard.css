@@ -12,6 +12,7 @@
 .comandImg{
     height: 100px;
     width: 100px;
+    margin-bottom: 5px;
     background-color: #372579;
     border-radius: 100px;
     text-align: center;

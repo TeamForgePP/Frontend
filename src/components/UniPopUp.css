@@ -20,10 +20,11 @@
     }
 
 .popup_header{
-     background: var(--purple);
+    background: var(--purple);
     color: white;
     padding: 25px 20px;
     text-align: center;
+    
 
 }
 
