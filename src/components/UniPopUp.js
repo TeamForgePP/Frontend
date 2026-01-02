@@ -22,7 +22,6 @@ function UniPopUp({
         }
     };
 
-    // Если попап не открыт - не показываем его
     if (!isOpen) {
         return null;
     }

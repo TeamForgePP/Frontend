@@ -1,0 +1,77 @@
+.editContainer{
+    background-color: white;
+    border-radius: 30px;
+    width: 50%;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 45px;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: block;
+}
+
+.editContainer h1{
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.popup-close{
+    right: 10px;
+    top: 10px;
+}
+
+.editContainer h2{
+    margin-bottom: 10px;
+    color: black;
+    font-size: 18px;
+}
+
+.editAllSection{
+    display: flex;
+    gap: 20px;
+    /* align-items: center; */
+    margin-bottom: 20px;
+}
+
+.editAllSection img{
+    width: 50px;
+    height: 50px;
+}
+
+
+.textEditButton{
+    background-color: transparent;
+    padding: 0;
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out ;
+}
+
+.textEditButton:hover{
+    color: var(--purple);
+    font-weight: 700;
+   
+}
+
+.editFormButtons{
+    display: flex;
+    margin-top: 10px;
+    gap: 15px;
+}
+
+.editInputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100hv;
+}
+
+.editInputs input{
+    margin-top: 5px;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+

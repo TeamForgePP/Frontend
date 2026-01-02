@@ -1,7 +1,7 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import HomePage from "./components/pages/HomePage";
 import LoginPage from "./components/pages/LoginPage";
-import ProfilePage from "./components/pages/ProfilePage";
+import ProfilePage from "./components/pages/Profile Page/ProfilePage";
 import ProjectPage from "./components/pages/ProjectPage/ProjectPage";
 
 function App() {

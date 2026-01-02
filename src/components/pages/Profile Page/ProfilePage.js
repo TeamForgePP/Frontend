@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import "./ProfilePage.css";
-import Header from "../Header/Header";
-import UniPopUp from "../UniPopUp";
-import edit from '../../assets/edit.svg';
-import exit from '../../assets/exit.svg';
-import profile from '../../assets/profileBig.svg'
+import Header from "../../Header/Header";
+import UniPopUp from "../../UniPopUp";
+import edit from '../../../assets/edit.svg';
+import exit from '../../../assets/exit.svg';
+import profile from '../../../assets/profileBig.svg'
+import ProfileEdit from "./ProfileEdit";
 
 
 function ProfilePage(){
     const [isPopUpOpen, setPopUpOpen] = useState(false)
+    const [isEditPopUpOpen, setEditPopUpOpen] = useState(false)
 
     const openPopUp = () =>{
         setPopUpOpen(true)
@@ -16,6 +18,14 @@ function ProfilePage(){
 
     const closePopUp= () =>{
         setPopUpOpen(false)
+    }
+
+    const openEditPopUp = () =>{
+        setEditPopUpOpen(true)
+    }
+
+    const closeEditPopUp= () =>{
+        setEditPopUpOpen(false)
     }
 
 
@@ -38,7 +48,7 @@ function ProfilePage(){
                         </div>
                         <div className="profileTabs">
                             <button className="profileEdit">
-                                <img src={edit} alt="edit img" title="Редактировать"></img>
+                                <img src={edit} alt="edit img" onClick={openEditPopUp} title="Редактировать"></img>
                             </button>
                             <button className="profileExit">
                                 <img src={exit} alt="edit exit" title="Выйти" onClick={openPopUp}></img>
@@ -56,6 +66,9 @@ function ProfilePage(){
                 popupOkText="Остаться"
                 popupNoText="Покинуть"
             />
+            <ProfileEdit
+            isOpen={isEditPopUpOpen}
+            onClose={closeEditPopUp}/>
         </div>
     )
 }
