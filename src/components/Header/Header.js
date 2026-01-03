@@ -1,12 +1,35 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import "./Header.css";
 import sunIcon from '../../assets/basil_sun-outline.svg';
 import profileIcon from '../../assets/iconoir_profile-circle.svg';
 import notificationIcon from '../../assets/ic_baseline-notifications-none.svg';
 import { NavLink } from 'react-router-dom';
+import Notifications from '../pages/Notifications';
 
-class Header extends React.Component{
-    render(){
+function Header(){
+    const [isOpenNotifications, setIsOpenNotifications] = useState(false)
+    const [unreadCount, setUnreadCount] = useState(0);
+    const [notificationsData, setNotificationsData] = useState(null);
+
+    useEffect(() => {
+        const loadNotificationsData = async () => {
+            try {
+                const data = await import('../pages/notification.json');
+                setNotificationsData(data.default || data);
+                setUnreadCount(data.unread_count || 0);
+            } catch (error) {
+                console.error('Ошибка загрузки уведомлений:', error);
+                setUnreadCount(0);
+            }
+        };
+
+        loadNotificationsData();
+    }, []);
+
+    const toggleNotifications = () =>{
+        setIsOpenNotifications(!isOpenNotifications)
+    }
+
         return(
         <header>
             <nav>
@@ -51,20 +74,34 @@ class Header extends React.Component{
                     }>
                         <img src={profileIcon} alt="Профиль"/>
                     </NavLink>
-                    <NavLink
-                    to = "/login"
-                    className={({ isActive }) => 
-                        `navLinkBtn ${isActive ? "active" : ""}`
-                    }>
-                        <img src={notificationIcon} alt="Уведомления"/>
-                    </NavLink>
+                    <button className={`notif ${isOpenNotifications ? 'active' : ''} `} 
+                    onClick={toggleNotifications}
+                    > 
+                    <img src={notificationIcon} alt='Уведомления'/>
+                    {unreadCount >0 && (
+                        <div className='unReadedCurcle'>
+                        <p>{unreadCount > 9 ? '9+' : unreadCount}</p>
+                    </div>
+                    )}
+                    
+                    
+                    
+                    </button>
+
+                    
                 </div>
             </nav>
-        </header>
-    
+            <Notifications
+                        isOpen = {isOpenNotifications}
+                        onClose={() =>setIsOpenNotifications(false)}
+                        setUnreadCount={setUnreadCount}
+                    />
+            
 
-        )
-    }
+        </header>
+        
+
+    )
 }
 
 

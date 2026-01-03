@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from 'react-router-dom';
 import "./ProfilePage.css";
 import Header from "../../Header/Header";
 import UniPopUp from "../../UniPopUp";
