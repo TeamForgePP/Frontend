@@ -1,7 +1,7 @@
 import react from "react";
 import "./ProjectPage.css";
 import Header from "../../Header/Header";
-import ProjectComand from "../../Main/Project/ProjectComand";
+import ProjectComandEdit from "../../Main/Project/ProjectComandEdit";
 import Report from "./Report";
 
 function ProjectPage(){
@@ -18,7 +18,7 @@ function ProjectPage(){
                 </div>
                 
                 <div className="uniInnerSection">
-                    <ProjectComand/>
+                    <ProjectComandEdit/>
                     <p className="reportInf">Git организация</p>
                     <input className="inputText"></input>
                     <p className="reportInf">Описание</p>

@@ -1,96 +1,163 @@
-import React , {useEffect, useState} from "react";
+import React, { useState } from "react";
 import './ProjectCard.css';
 import ProjectMap from "./ProjectMap";
 import UniPopUp from "../../UniPopUp";
+import { projectService } from '../../services/projectService';
+import { useNavigate } from 'react-router-dom';
 
-function ProjectCard(){ 
-      const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-      const [projectData, setProjectData] = useState({});
+function ProjectCard({ project, onProjectDeleted }) {
+    const [isDeletePopUpOpen, setIsDeletePopUpOpen] = useState(false);
+    const [isLeavePopUpOpen, setIsLeavePopUpOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-      const fetchHomeInfo = async () =>{
-        try{
-          const response = await fetch('user/home',{
-            method:'GET',
-            headers: {
-              'Content-Type': 'application/json'
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Не указан';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU');
+    };
+
+    const formatRoles = (roles) => {
+        if (!roles || !Array.isArray(roles)) return 'Не указана';
+        return roles.join(', ');
+    };
+
+    const handleOpenProject = () => {
+        navigate(`/project/${project.id}`);
+    };
+
+    const handleDeleteProject = async () => {
+        setLoading(true);
+        try {
+            await projectService.deleteProject(project.id);
+            if (onProjectDeleted) {
+                onProjectDeleted(project.id);
             }
-          });
-           
-          if (response.ok){
-            const realData = await response.json();
-            const firstProject = realData.projects[0];
-
-            setProjectData({
-              name: firstProject.name,
-              status: firstProject.is_completed ? "Завершен" : "В разработке",
-              currentSprint: `${firstProject.current_sprint_seq} – ${firstProject.current_sprint_name}`,
-              role: firstProject.roles[0],
-              deadline: firstProject.nearest_deadline
-            });
-            console.log('Данные получены с сервера!');
-            } else {
-              throw new Error('Сервер вернул ошибку');
-            }
-          }
-          catch (error) {
-          console.log('Бэкенд не отвечает, используем данные по умолчанию');
-
-          const defaultData = {
-            name: "TeamForgePP",
-            status: "В разработке",
-            currentSprint: "4 – Базовое окружение проекта",
-            role: "Какая-то",
-            deadline: "30.10.2025"
-          };
-
-          setProjectData(defaultData);
+        } catch (error) {
+            console.error('Ошибка удаления проекта:', error);
+            alert(error.response?.data?.message || 'Не удалось удалить проект');
+        } finally {
+            setLoading(false);
+            setIsDeletePopUpOpen(false);
         }
-      };
+    };
 
-      useEffect(() =>{
-        fetchHomeInfo();
-      }, []);
+    const handleLeaveProject = async () => {
+        setLoading(true);
+        try {
+            await projectService.leaveProject(project.id);
+            if (onProjectDeleted) {
+                onProjectDeleted(project.id);
+            }
+        } catch (error) {
+            console.error('Ошибка выхода из проекта:', error);
+            alert(error.response?.data?.message || 'Не удалось покинуть проект');
+        } finally {
+            setLoading(false);
+            setIsLeavePopUpOpen(false);
+        }
+    };
 
-      const openPopUp = () => {
-          setIsPopUpOpen(true);
-      }
-      
-      const closePopUp = () => {
-          setIsPopUpOpen(false);
-      }
+    const openDeletePopUp = () => {
+        setIsDeletePopUpOpen(true);
+    };
 
-    return(
-      <div className="uniInnerSection">
-        <div className="project_die_info">
-          <div className="project_die_text">
-            <h2>{projectData.name}</h2>
-            <span className="status_badge">{projectData.status}</span>
-          </div>
-          <div className="project_die_actions">
-            <button className="ok_button">Открыть</button>
-            <button className="bad_button" onClick={openPopUp}>
-              Удалить
-            </button>
-          </div>
-        </div>
+    const openLeavePopUp = () => {
+        setIsLeavePopUpOpen(true);
+    };
 
-        <div className="project_die_main_info">
-          <p><strong>Текущий спринт:</strong> {projectData.currentSprint}</p>
-          <p><strong>Твоя роль:</strong>{projectData.role}</p>
-          <p><strong>Ближайший дедлайн:</strong> {projectData.deadline}</p>
-        </div>
-        <ProjectMap />
-        <UniPopUp 
-                isOpen={isPopUpOpen}
-                onClose={closePopUp}
+    const closeDeletePopUp = () => {
+        setIsDeletePopUpOpen(false);
+    };
+
+    const closeLeavePopUp = () => {
+        setIsLeavePopUpOpen(false);
+    };
+
+    return (
+        <div className="uniInnerSection">
+            <div className="project_die_info">
+                <div className="project_die_text">
+                    <h2>{project.name || 'Без названия'}</h2>
+                    <span className={`status_badge ${project.is_completed ? 'completed' : 'in-progress'}`}>
+                        {project.is_completed ? 'Завершен' : 'В разработке'}
+                    </span>
+                </div>
+                <div className="project_die_actions">
+                    <button 
+                        className="ok_button" 
+                        onClick={handleOpenProject}
+                        disabled={loading}
+                    >
+                        Открыть
+                    </button>
+                    
+                    {project.allowed_actions?.can_leave && (
+                        <button 
+                            className="warning_button"
+                            onClick={openLeavePopUp}
+                            disabled={loading}
+                            style={{ backgroundColor: '#ffa500' }}
+                        >
+                            Покинуть
+                        </button>
+                    )}
+                    
+                    {project.allowed_actions?.can_delete && (
+                        <button 
+                            className="bad_button" 
+                            onClick={openDeletePopUp}
+                            disabled={loading}
+                        >
+                            Удалить
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            <div className="project_die_main_info">
+                <p>
+                    <strong>Текущий спринт:</strong> 
+                    {project.current_sprint_seq ? `${project.current_sprint_seq} – ${project.current_sprint_name}` : 'Не указан'}
+                </p>
+                <p><strong>Твоя роль:</strong> {formatRoles(project.roles)}</p>
+                <p>
+                    <strong>Ближайший дедлайн:</strong> 
+                    {formatDate(project.nearest_deadline)}
+                </p>
+            </div>
+            
+            {project.sprint_map && project.sprint_map.length > 0 && (
+                <ProjectMap sprints={project.sprint_map} />
+            )}
+
+            {/* Попап удаления проекта */}
+            <UniPopUp 
+                isOpen={isDeletePopUpOpen}
+                onClose={closeDeletePopUp}
                 popupHeader="ВНИМАНИЕ"
                 popupText1="Вы уверены, что хотите удалить проект?"
                 popupText2="Это действие нельзя будет отменить."
+                popupOkText="Отмена"
+                popupNoText="Удалить"
+                onConfirm={handleDeleteProject}
+                loading={loading}
+            />
+
+            {/* Попап выхода из проекта */}
+            <UniPopUp 
+                isOpen={isLeavePopUpOpen}
+                onClose={closeLeavePopUp}
+                popupHeader="ВНИМАНИЕ"
+                popupText1="Вы уверены, что хотите покинуть проект?"
+                popupText2="Вы сможете вернуться только по приглашению."
                 popupOkText="Остаться"
                 popupNoText="Покинуть"
+                onConfirm={handleLeaveProject}
+                loading={loading}
             />
-      </div>
-    )
+        </div>
+    );
 }
 
-export default ProjectCard
+export default ProjectCard;

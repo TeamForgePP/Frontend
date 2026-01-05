@@ -2,6 +2,7 @@
     background-color: white;
     border-radius: 30px;
     width: 50%;
+    min-width: 400px;
     padding: 20px;
     position: fixed;
     top: 50%;
@@ -66,12 +67,15 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 100hv;
+    
 }
 
 .editInputs input{
     margin-top: 5px;
     padding: 8px 12px;
     border-radius: 10px;
+    
 }
+
+
 

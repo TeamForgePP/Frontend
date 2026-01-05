@@ -7,18 +7,35 @@ function UniPopUp({
     popupHeader,
     popupText1,
     popupText2, 
-    popupOkText,
-    popupNoText}){
+    popupOkText = "ОК",
+    popupNoText = "Отмена",
+    onConfirm,
+    loading = false,
+    hideCloseButton = false,
+    showOnlyConfirm = false,
+    confirmButtonVariant = "primary",
+    customClassName = "",
+    disableBackdropClose = false
+}){
 
     const handleOkClick = () => {
-        if (onClose) {
-        onClose();
+        if (onClose && !loading) {
+            onClose();
         }
     };
 
     const handleNoClick = () => {
-        if (onClose) {
-        onClose(); 
+        if (onConfirm && !loading) {
+            onConfirm();
+        }
+        if (!loading) {
+            onClose?.();
+        }
+    };
+
+    const handleOverlayClick = () => {
+        if (!disableBackdropClose && !loading) {
+            onClose?.();
         }
     };
 
@@ -26,11 +43,18 @@ function UniPopUp({
         return null;
     }
 
-
     return(
-        <div className="overlay" onClick={onClose}>
-           <div className="UniPopUp" onClick={(e) => e.stopPropagation()}>
-            <button class="Unipopup-close" onClick={onClose}>×</button>
+        <div className="overlay" onClick={handleOverlayClick}>
+           <div className={`UniPopUp ${customClassName}`} onClick={(e) => e.stopPropagation()}>
+                {!hideCloseButton && (
+                    <button 
+                        className="Unipopup-close" 
+                        onClick={onClose}
+                        disabled={loading}
+                    >
+                        ×
+                    </button>
+                )}
                 <div className="popup_content">
                     <div className="popup_header">
                         <h2>{popupHeader}</h2>
@@ -38,17 +62,30 @@ function UniPopUp({
                     <div className="popup_body">
                         <div className="popup_text">
                             <p>{popupText1}</p>
-                            <p>{popupText2}</p>
+                            {popupText2 && <p>{popupText2}</p>}
                         </div>
                         <div class="btn_container">
-                            <button className="ok_button"  onClick={handleOkClick}>{popupOkText}</button>
-                            <button className="bad_button" onClick={handleNoClick}>{popupNoText}</button>
+                            {!showOnlyConfirm && (
+                                <button 
+                                    className="ok_button"  
+                                    onClick={handleOkClick}
+                                    disabled={loading}
+                                >
+                                    {popupOkText}
+                                </button>
+                            )}
+                            <button 
+                                className={`bad_button ${confirmButtonVariant === 'danger' ? 'danger-button' : ''}`} 
+                                onClick={handleNoClick}
+                                disabled={loading}
+                            >
+                                {loading ? 'Обработка...' : popupNoText}
+                            </button>
                         </div>
                     </div>
                 </div>
             </div> 
         </div>
-        
     )
 }
 
