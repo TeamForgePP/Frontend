@@ -1,0 +1,42 @@
+.projectHeaderText{
+    display: flex;
+    justify-content: space-between;
+}
+
+.uniInnerSection{
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.uniInnerSection.sprints{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.sprint{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    flex: 1 0 calc(50% - 1em); 
+    box-shadow: var(--main-shadow);
+    border-radius: 1em;
+    padding: 1em;
+}
+
+.sprint button{
+    background-color: transparent;
+    width: 50px;
+    height: 50px;
+    box-sizing: content-box;
+    padding: 0;
+}
+
+.doneBtn{
+    background-color: var(--green);
+    color: var(--grey-font);
+}

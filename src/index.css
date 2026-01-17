@@ -4,6 +4,7 @@
     --main-shadow: 0 -1px 5px 0px rgba(0, 0, 0, 0.11);
     --purple: #372579;
     --grey-back:#F0F1F2;
+    --green:#97FFAF;
 }
 
 
@@ -97,3 +98,13 @@ input{
     background-color: #fea3a3;
 }
 
+.empty, .loading, .error{
+    font-size: 18px;
+    text-align: center;
+    padding: 1em 1em;
+}
+
+.error {
+    color: #ff4757;
+
+}

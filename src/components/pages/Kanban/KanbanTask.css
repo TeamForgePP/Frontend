@@ -1,0 +1,51 @@
+.taskContainer{
+    background-color: white;
+    padding: .5em;
+    border-radius: .5em;
+}
+
+.taskTitle{
+    margin-bottom: .7em;
+    font-weight: 700;
+}
+
+.taskRole{
+    background-color: var(--purple);
+    color: white;
+    padding: .2em;
+    font-weight: 700;
+    border-radius: .7em;
+}
+
+.taskDate{
+    margin: .7em 0;
+    padding: .2em 1em;
+    border: solid 1px #111;
+    border-radius: 1.2em;
+    width:max-content;
+}
+
+.taskPeople{
+    margin: .7em 0;
+    display: flex;
+    gap:.5em;
+    align-content: center;
+}
+
+.taskPeople div{
+background-color: var(--purple);
+width: 20px;
+height: 20px;
+border-radius: 10px;
+}
+
+
+
+.taskFooter{
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskFooter p{
+    font-size: 28px;
+}

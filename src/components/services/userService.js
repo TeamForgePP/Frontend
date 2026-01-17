@@ -4,7 +4,7 @@ export const userService = {
   // Получить данные профиля
   getProfile: async () => {
     try {
-      const response = await api.get('/api/user/profile');
+      const response = await api.get('/user/profile');
       return response;
     } catch (error) {
       console.error('Ошибка получения профиля:', error);
@@ -15,7 +15,7 @@ export const userService = {
   // Обновить данные профиля
   updateProfile: async (profileData) => {
     try {
-      const response = await api.post('/api/user/profile/edit', profileData);
+      const response = await api.post('/user/profile/edit', profileData);
       return response;
     } catch (error) {
       console.error('Ошибка обновления профиля:', error);
@@ -26,7 +26,7 @@ export const userService = {
   // Сменить пароль
   changePassword: async (passwordData) => {
     try {
-      const response = await api.post('/api/user/profile/edit-password', passwordData);
+      const response = await api.post('/user/profile/edit-password', passwordData);
       return response;
     } catch (error) {
       console.error('Ошибка смены пароля:', error);
@@ -37,7 +37,7 @@ export const userService = {
   // Выход из аккаунта
   logout: async () => {
     try {
-      const response = await api.post('/api/user/profile/logout');
+      const response = await api.post('/user/profile/logout');
       return response;
     } catch (error) {
       console.error('Ошибка выхода:', error);

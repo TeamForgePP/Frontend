@@ -7,7 +7,7 @@
 .loginForm{
     background-color: white;
     width: 500px;
-    height: 350px;
+    height: 370px;
     border-radius: 50px;
     box-shadow: var(--main-shadow);
     position: fixed;
@@ -66,6 +66,7 @@
 }
 
 .loginBtnContainer{   
+    margin-top: 29px;
     text-align: center;
 }
 

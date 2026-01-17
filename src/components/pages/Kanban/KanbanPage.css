@@ -1,0 +1,22 @@
+.kanbanContent{
+    display: flex;
+    gap:1em
+}
+
+.columnNames{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: .7em;
+}
+
+.kanbanColumn{
+    background-color: var(--grey-back);
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.tasksContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
