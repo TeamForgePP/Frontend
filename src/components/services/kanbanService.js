@@ -4,7 +4,7 @@ class KanbanService {
   // Получение данных канбан-доски для актуального спринта
   getKanbanData = async () => {
     try {
-      const response = await api.get('/projects/kanban/');
+      const response = await api.get('/kanban');
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении данных канбан-доски:', error);
@@ -15,7 +15,7 @@ class KanbanService {
   // Получение тасок по конкретному спринту
   getSprintTasks = async (sprintId) => {
     try {
-      const response = await api.get(`/projects/kanban/${sprintId}`);
+      const response = await api.get(`/kanban/${sprintId}`);
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении тасок спринта:', error);
@@ -26,7 +26,7 @@ class KanbanService {
   // Создание новой задачи
   createNewTask = async (taskData) => {
     try {
-      const response = await api.post('/projects/kanban/new-task', taskData);
+      const response = await api.post('/kanban/new-task', taskData);
       return response.data;
     } catch (error) {
       console.error('Ошибка при создании задачи:', error);
@@ -37,7 +37,7 @@ class KanbanService {
   // Получение всех участников команды
   getTeamMembers = async () => {
     try {
-      const response = await api.get('/projects/kanban/team-members');
+      const response = await api.get('/kanban/team-members');
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении участников команды:', error);
@@ -59,7 +59,7 @@ class KanbanService {
   // Обновление статуса задачи
   updateTaskStatus = async (taskId, status) => {
     try {
-      const response = await api.post('/projects/kanban/update-status', {
+      const response = await api.post('/kanban/update-status', {
         task_id: taskId,
         status: status
       });

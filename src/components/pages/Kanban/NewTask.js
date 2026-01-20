@@ -188,7 +188,6 @@ function NewTask({ isOpen, onClose, taskToEdit, onTaskSaved }) {
           <div className="newTaskContent">
             {/* Название задачи */}
             <div className="form-group">
-              <label>Название задачи*</label>
               <input
                 type="text"
                 name="title"
@@ -202,7 +201,6 @@ function NewTask({ isOpen, onClose, taskToEdit, onTaskSaved }) {
             
             {/* Описание задачи */}
             <div className="form-group">
-              <label>Описание задачи*</label>
               <textarea
                 name="description"
                 value={taskData.description}
@@ -217,7 +215,6 @@ function NewTask({ isOpen, onClose, taskToEdit, onTaskSaved }) {
             <div className="newTaskThings">
               {/* Исполнители */}
               <div className="newTaskThing">
-                <label>Исполнитель*</label>
                 <select
                   name="performers"
                   multiple
@@ -239,7 +236,6 @@ function NewTask({ isOpen, onClose, taskToEdit, onTaskSaved }) {
               
               {/* Приоритет */}
               <div className="newTaskThing">
-                <label>Приоритет</label>
                 <select
                   name="priority"
                   value={taskData.priority}

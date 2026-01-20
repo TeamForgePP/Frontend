@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ComandCard.css";
 import profilImg from '../../../assets/iconoir_profile-circle.svg';
+import UniPopUp from "../../UniPopUp";
 
 function ComandCard({
     id,
@@ -8,96 +9,67 @@ function ComandCard({
     surname = "Иванов",
     role = "Backend",
     onRemove,
-    onUpdate,
     disabled = false
 }) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [editData, setEditData] = useState({ name, surname, role });
+    const [isDeletePopUpOpen, setIsDeletePopUpOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSave = () => {
-        if (onUpdate) {
-            onUpdate(id, editData);
-        }
-        setIsEditing(false);
-    };
-
-    const handleCancel = () => {
-        setEditData({ name, surname, role });
-        setIsEditing(false);
-    };
-
-    const handleRemove = (e) => {
+    const handleRemoveClick = (e) => {
         e.stopPropagation();
         if (onRemove && !disabled) {
-            onRemove(id);
+            setIsDeletePopUpOpen(true);
         }
     };
 
-    if (isEditing) {
-        return (
-            <div className="comandCardContainer">
-                <div className="comandContent">
-                    <div className="comandImg">
-                        <img src={profilImg} alt={`${name} ${surname}`} />
-                    </div>
-                    <div className="editInputs">
-                        <input
-                            type="text"
-                            value={editData.name}
-                            onChange={(e) => setEditData({...editData, name: e.target.value})}
-                            placeholder="Имя"
-                            disabled={disabled}
-                        />
-                        <input
-                            type="text"
-                            value={editData.surname}
-                            onChange={(e) => setEditData({...editData, surname: e.target.value})}
-                            placeholder="Фамилия"
-                            disabled={disabled}
-                        />
-                        <input
-                            type="text"
-                            value={editData.role}
-                            onChange={(e) => setEditData({...editData, role: e.target.value})}
-                            placeholder="Роль"
-                            disabled={disabled}
-                        />
-                    </div>
-                    <div className="editButtons">
-                        <button className="ok_button" onClick={handleSave} disabled={disabled}>
-                            Сохранить
-                        </button>
-                        <button className="bad_button" onClick={handleCancel} disabled={disabled}>
-                            Отмена
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    const closeDeletePopUp = () => {
+        setIsDeletePopUpOpen(false);
+    };
+
+    const handleConfirmRemove = () => {
+        if (onRemove && !disabled) {
+            setIsLoading(true);
+            try {
+                onRemove(id);
+                closeDeletePopUp();
+            } catch (error) {
+                console.error('Ошибка при удалении:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
 
     return (
-        <div 
-            className="comandCardContainer"
-            onClick={() => !disabled && setIsEditing(true)}
-            style={{ cursor: disabled ? 'default' : 'pointer' }}
-        >
-            <div className="comandContent">
+        <div className="static-team">
+            <div className="teamMemberStatic">
                 <div className="comandImg">
                     <img src={profilImg} alt={`${name} ${surname}`} />
                 </div>
                 <div className="comandText">
-                    <p>{name} {surname}</p>
-                    <p>{role}</p>
+                    <span>{name} {surname}</span>
+                    <span className="memberRole">{role}</span>
                 </div>
                 <button 
                     className="bad_button" 
-                    onClick={handleRemove}
+                    onClick={handleRemoveClick}
                     disabled={disabled}
                 >
                     Исключить
                 </button>
             </div>
+            
+            {/* Попап подтверждения исключения */}
+            <UniPopUp 
+                isOpen={isDeletePopUpOpen}
+                onClose={closeDeletePopUp}
+                popupHeader="ВНИМАНИЕ"
+                popupText1={`Вы действительно хотите исключить ${name} ${surname} из команды?`}
+                popupText2=""
+                popupOkText="Оставить в команде"
+                popupNoText="Исключить"
+                onConfirm={handleConfirmRemove}
+                loading={isLoading}
+            />
         </div>
     );
 }

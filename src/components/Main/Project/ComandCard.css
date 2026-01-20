@@ -7,7 +7,7 @@
     background-color: white;
     height: 220px;
     border-radius: 20px;
-    min-width: 200px;
+    min-width: 170px;
 }
 
 .comandImg{
@@ -31,7 +31,10 @@
 }
 
 .comandText{
+    display: flex;
+    flex-direction: column;
     text-align: center;
     margin-bottom: 10px;
+    gap:5px;
 }
 

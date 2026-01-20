@@ -10,9 +10,10 @@
     display: flex;
     border-radius: 15px;
     gap: 20px;
-    min-height: 280px;
+    min-height: 200px;
     max-height: 280px;
     padding-bottom: 20px;
-    align-items: flex-start;
     margin-bottom: 10px;
+    align-items: center;
+    justify-content: center;
 }

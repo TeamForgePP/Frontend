@@ -31,10 +31,9 @@ function ProfilePage() {
         } catch (err) {
             console.error('Ошибка загрузки профиля:', err);
             setError('Не удалось загрузить данные профиля');
-            // Если ошибка 401 (не авторизован), перенаправляем на логин
             if (err.response?.status === 401) {
                 navigate('/login');
-            }
+            } 
         } finally {
             setLoading(false);
         }
@@ -71,37 +70,39 @@ function ProfilePage() {
     };
 
     // Функция для форматирования ролей
-    const formatRoles = (roles) => {
-        if (!roles || !Array.isArray(roles)) return '';
-        return roles.join(', ');
+    const formatRole = (role) => {
+        if (!role || role === '-') return 'Не указана';
+        return role;
     };
 
     // Функция для получения полного ФИО
     const getFullName = () => {
         if (!userData) return '';
-        const { first_name, last_name, patronymic } = userData;
-        return `${last_name || ''} ${first_name || ''} ${patronymic || ''}`.trim();
+        return userData.full_name || 'Не указано';
     };
 
-    if (loading) {
+    // Рендер загрузки
+    if (loading && !userData) {
         return (
-            <div className="profileMainContainer">
+            <div className="projectMainContainer">
                 <Header />
-                <div className="uniSection">
-                    <h1 className="profileHeader">Профиль</h1>
-                    <div className="loading">Загрузка данных...</div>
+                <div className="loading-container">
+                    <div className="spinner"></div>
+                    <p>Загрузка профиля...</p>
                 </div>
             </div>
         );
     }
 
-    if (error) {
+    // Рендер ошибки
+    if (error || !userData) {
         return (
-            <div className="profileMainContainer">
+            <div className="projectMainContainer">
                 <Header />
-                <div className="uniSection">
-                    <h1 className="profileHeader">Профиль</h1>
-                    <div className="error">{error}</div>
+                <div className="error-container">
+                    <h2>Ошибка</h2>
+                    <p>{error || 'Профиль не найден'}</p>
+                    <button onClick={loadProfileData}>Повторить попытку</button>
                 </div>
             </div>
         );
@@ -120,7 +121,7 @@ function ProfilePage() {
                         <div className="profileInfo">
                             <p><strong>ФИО:</strong> {getFullName()}</p>
                             <p><strong>Группа:</strong> {userData?.group || 'Не указана'}</p>
-                            <p><strong>Роль:</strong> {formatRoles(userData?.roles)}</p>
+                            <p><strong>Роль:</strong> {formatRole(userData?.role)}</p>
                             <p><strong>Почта:</strong> {userData?.email || 'Не указана'}</p>
                         </div>
                         <div className="profileTabs">

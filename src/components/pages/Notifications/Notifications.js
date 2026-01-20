@@ -82,7 +82,10 @@ function Notifications({
             </div>
             
             {loading ? (
-                <div className="loading"><p>Загрузка уведомлений...</p></div>
+                <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Загрузка уведомлений...</p>
+            </div>
             ) : notifications.length === 0 ? (
                 <div className="empty"><p>Нет уведомлений</p></div>
             ) : (

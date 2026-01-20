@@ -22,9 +22,15 @@
     font-weight: 600;
     color: var(--grey-font);
     padding: 5px 15px;
-    background-color: #97FFAF;
     border-radius: 5px;
+}
 
+.status_badge.in-progress{
+    background-color: #97FFAF;
+}
+
+.status_badge.completed{
+    background-color: var(--grey-back);
 }
 
 .project_die_actions{

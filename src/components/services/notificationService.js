@@ -5,7 +5,7 @@ export const notificationService = {
   // Получение списка уведомлений
   getNotifications: async () => {
     try {
-      const response = await api.get('/user/notifications');
+      const response = await api.get('/notifications');
       return response.data;
     } catch (error) {
       console.error('Ошибка получения уведомлений:', error);
@@ -16,7 +16,7 @@ export const notificationService = {
   // Отметить все как прочитанные
   markAllAsRead: async () => {
     try {
-      const response = await api.patch('/user/notifications/read-all');
+      const response = await api.patch('/notifications/read-all');
       return response.data;
     } catch (error) {
       console.error('Ошибка отметки всех как прочитанных:', error);
@@ -27,7 +27,7 @@ export const notificationService = {
   // Получить информацию о приглашении
   getInvitation: async (invitationId) => {
     try {
-      const response = await api.get(`/user/invitations/${invitationId}`);
+      const response = await api.get(`/invitations/${invitationId}`);
       return response.data;
     } catch (error) {
       console.error('Ошибка получения приглашения:', error);

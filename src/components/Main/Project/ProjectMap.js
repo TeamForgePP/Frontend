@@ -26,7 +26,13 @@ function ProjectMap({ sprints = [] }) {
                 <div className="map">
                     {sprints.map((sprint, index) => (
                         <React.Fragment key={sprint.id}>
-                            <div className="map_item">
+                            <div 
+                                className={`map_item ${sprint.active ? 'active-sprint' : ''}`}
+                                style={sprint.active ? {
+                                    boxShadow: '0px -1px 20px rgba(31, 255, 11, 0.5)',
+                                    border: '1px solid rgba(31, 255, 11, 0.3)'
+                                } : {}}
+                            >
                                 <p>{sprint.seq ? `${sprint.seq} – ` : ''}{sprint.name}</p>
                                 <p className="map_date">{formatDate(sprint.deadline)}</p>
                             </div>

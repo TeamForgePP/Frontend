@@ -52,6 +52,14 @@ h2{
     color:var(--grey-font);
 }
 
+h3{
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: black;
+
+}
+
 p{
     font-family: "Montserrat", sans-serif;
     font-size: 16px;
@@ -82,11 +90,24 @@ input{
 .ok_button{
     color: var(--grey-font);
     background-color: #E7E7E7;
+    transition: .3s background;
 }
 
 .bad_button{
     color: var(--grey-font);
     background-color: #FFB5B5;
+    transition: .3s background;
+}
+
+.green_button{
+    color: var(--grey-font);
+    background-color: var(--green);
+    transition: .3s background;
+    
+}
+
+.green_button:hover{
+    background-color: #7efc9b;
 
 }
 

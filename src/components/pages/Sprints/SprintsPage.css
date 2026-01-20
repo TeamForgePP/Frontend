@@ -40,3 +40,59 @@
     background-color: var(--green);
     color: var(--grey-font);
 }
+
+.newSprint{
+    background-color: var(--purple);
+    color: white;
+}
+
+.no-sprints {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+.doneBtn:disabled,
+.newSprint:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.date-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.date-inputs input {
+  padding: 5px;
+  border-radius: 8px;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border-radius: 4px;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './ProjectCard.css';
 import ProjectMap from "./ProjectMap";
 import UniPopUp from "../../UniPopUp";
-import { projectService } from '../../services/projectService';
+import { homeService } from '../../services/homeService';
 import { useNavigate } from 'react-router-dom';
 
 function ProjectCard({ project, onProjectDeleted }) {
@@ -11,15 +11,49 @@ function ProjectCard({ project, onProjectDeleted }) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Для отладки
+    console.log('ProjectCard получил проект:', project);
+    console.log('role поле:', project?.role);
+    console.log('roles поле:', project?.roles);
+
+    // Защита от undefined
+    if (!project) {
+        console.warn('ProjectCard получил undefined project');
+        return (
+            <div className="uniInnerSection">
+                <div className="project-error-placeholder">
+                    <p>Данные проекта не загружены</p>
+                </div>
+            </div>
+        );
+    }
+
     const formatDate = (dateString) => {
         if (!dateString) return 'Не указан';
         const date = new Date(dateString);
         return date.toLocaleDateString('ru-RU');
     };
 
-    const formatRoles = (roles) => {
-        if (!roles || !Array.isArray(roles)) return 'Не указана';
-        return roles.join(', ');
+    const formatRole = (role) => {
+        console.log('formatRole получил:', role);
+        if (!role) return 'Не указана';
+        
+        // Если role - массив
+        if (Array.isArray(role)) {
+            const formatted = role.join(', ');
+            console.log('Отформатированный массив:', formatted);
+            return formatted;
+        }
+        
+        // Если role - строка
+        if (typeof role === 'string') {
+            const formatted = role === '-' ? 'Не указана' : role;
+            console.log('Отформатированная строка:', formatted);
+            return formatted;
+        }
+        
+        console.log('Нераспознанный формат role:', typeof role);
+        return 'Не указана';
     };
 
     const handleOpenProject = () => {
@@ -29,7 +63,7 @@ function ProjectCard({ project, onProjectDeleted }) {
     const handleDeleteProject = async () => {
         setLoading(true);
         try {
-            await projectService.deleteProject(project.id);
+            await homeService.deleteProject(project.id);
             if (onProjectDeleted) {
                 onProjectDeleted(project.id);
             }
@@ -45,7 +79,7 @@ function ProjectCard({ project, onProjectDeleted }) {
     const handleLeaveProject = async () => {
         setLoading(true);
         try {
-            await projectService.leaveProject(project.id);
+            await homeService.leaveProject(project.id);
             if (onProjectDeleted) {
                 onProjectDeleted(project.id);
             }
@@ -94,10 +128,9 @@ function ProjectCard({ project, onProjectDeleted }) {
                     
                     {project.allowed_actions?.can_leave && (
                         <button 
-                            className="warning_button"
+                            className="bad_button"
                             onClick={openLeavePopUp}
                             disabled={loading}
-                            style={{ backgroundColor: '#ffa500' }}
                         >
                             Покинуть
                         </button>
@@ -120,7 +153,8 @@ function ProjectCard({ project, onProjectDeleted }) {
                     <strong>Текущий спринт:</strong> 
                     {project.current_sprint_seq ? `${project.current_sprint_seq} – ${project.current_sprint_name}` : 'Не указан'}
                 </p>
-                <p><strong>Твоя роль:</strong> {formatRoles(project.roles)}</p>
+                {/* Исправлено: project.role вместо project.roles */}
+                <p><strong>Твоя роль:</strong> {formatRole(project.role)}</p>
                 <p>
                     <strong>Ближайший дедлайн:</strong> 
                     {formatDate(project.nearest_deadline)}

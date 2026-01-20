@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./PopUpNewProject.css";
 import ProjectComandEdit from "./ProjectComandEdit";
-import { projectService } from '../../services/projectService';
+import AddStudents from "../../pages/ProjectPage/addStudents";
+import { homeService } from '../../services/homeService';
 
 function PopUpNewProject({
     isOpen = false,
@@ -14,16 +15,60 @@ function PopUpNewProject({
         team: [],
         git_organization: ""
     });
+    const [localTeam, setLocalTeam] = useState([]); // Локальное состояние для отображения команды
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isAddStudentsOpen, setIsAddStudentsOpen] = useState(false);
 
     const handleTeamUpdate = (team) => {
-        // Преобразуем команду в формат API
+        // Сохраняем локальную команду для отображения
+        setLocalTeam(team);
+        
+        // Преобразуем команду в формат API для отправки
         const apiTeam = team.map(member => ({
             id: member.id,
-            roles: [member.role] // Здесь нужно уточнить формат ролей
+            roles: Array.isArray(member.roles) ? member.roles : [member.role || ""]
         }));
-        setFormData(prev => ({ ...prev, team: apiTeam }));
+        
+        setFormData(prev => ({ 
+            ...prev, 
+            team: apiTeam 
+        }));
+    };
+
+    const handleAddStudent = (student) => {
+        const newMember = {
+            id: student.id || `temp_${Date.now()}`,
+            name: student.name,
+            surname: student.surname,
+            role: student.roles ? student.roles.join(', ') : student.role || "",
+            roles: student.roles || []
+        };
+        
+        // Обновляем локальную команду
+        const updatedTeam = [...localTeam, newMember];
+        setLocalTeam(updatedTeam);
+        
+        // Преобразуем в формат API и обновляем formData
+        const apiTeam = updatedTeam.map(member => ({
+            id: member.id,
+            roles: Array.isArray(member.roles) ? member.roles : [member.role || ""]
+        }));
+        
+        setFormData(prev => ({ 
+            ...prev, 
+            team: apiTeam 
+        }));
+        
+        closeAddStudents();
+    };
+
+    const openAddStudents = () => {
+        setIsAddStudentsOpen(true);
+    };
+
+    const closeAddStudents = () => {
+        setIsAddStudentsOpen(false);
     };
 
     const handleInputChange = (e) => {
@@ -48,7 +93,15 @@ function PopUpNewProject({
         setError("");
 
         try {
-            await projectService.createProject(formData);
+            // Подготавливаем данные для отправки в правильном формате
+            const projectData = {
+                name: formData.name,
+                description: formData.description,
+                team: formData.team,
+                git_organization: formData.git_organization || ""
+            };
+            
+            await homeService.createProject(projectData);
             
             // Сброс формы
             setFormData({
@@ -57,6 +110,7 @@ function PopUpNewProject({
                 team: [],
                 git_organization: ""
             });
+            setLocalTeam([]);
             
             // Закрытие попапа
             onClose();
@@ -105,7 +159,6 @@ function PopUpNewProject({
                             value={formData.name}
                             onChange={handleInputChange}
                             disabled={loading}
-                            placeholder="Введите название проекта"
                         />
                         
                         <p>Описание</p>
@@ -115,10 +168,26 @@ function PopUpNewProject({
                             value={formData.description}
                             onChange={handleInputChange}
                             disabled={loading}
-                            placeholder="Опишите проект"
                         />
                         
+                        <div className="section-header">
+                            <p style={{ marginBottom: '10px' }}>Команда</p>
+                            <button 
+                                className="add-member-btn ok_button"
+                                onClick={openAddStudents}
+                                disabled={loading}
+                                style={{
+                                    marginBottom: '15px',
+                                    padding: '8px 16px',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                + Добавить участника
+                            </button>
+                        </div>
+                        
                         <ProjectComandEdit 
+                            team={localTeam} // Передаем локальную команду для отображения
                             onTeamUpdate={handleTeamUpdate}
                             disabled={loading}
                         />
@@ -130,7 +199,6 @@ function PopUpNewProject({
                             value={formData.git_organization}
                             onChange={handleInputChange}
                             disabled={loading}
-                            placeholder="Название организации на GitHub/GitLab"
                         />
                     </div>
                     
@@ -148,6 +216,13 @@ function PopUpNewProject({
                     </div>
                 </div>
             </div>
+
+            <AddStudents
+                isOpen={isAddStudentsOpen}
+                onClose={closeAddStudents}
+                onAddStudent={handleAddStudent}
+                projectId={null}
+            />
         </div>
     );
 }

@@ -1,22 +1,46 @@
 import React from "react";
-import './Report.css'
+import './Report.css';
 import ReportCard from "./ReportCard";
 
-function Report(){
-    return(
+function Report({ 
+    reports = [], 
+    canEdit = false, 
+    onReportClick, 
+    onCreateReport,
+    onDeleteReport
+}) {
+    return (
         <div className="reportSection">
             <div className="reportHeader">
-                <p className="reportTitle">Отчёты</p>
-                <button className="reportButton">Добавить отчёт</button>
+                <h1 className="reportTitle">Отчёты</h1>
+                {canEdit && (
+                    <button 
+                        className="reportButton ok_button"
+                        onClick={onCreateReport}
+                    >
+                        Добавить отчёт
+                    </button>
+                )}
             </div>
+            
             <div className="reports">
-                <ReportCard/>
-
+                {reports.length > 0 ? (
+                    reports.map(report => (
+                        <ReportCard 
+                            key={report.id}
+                            report={report}
+                            onReportClick={onReportClick}
+                            onDeleteReport={onDeleteReport}
+                        />
+                    ))
+                ) : (
+                    <div className="no-reports">
+                        <p>Отчётов пока нет</p>
+                    </div>
+                )}
             </div>
-
         </div>
-
-    )
+    );
 }
 
 export default Report;

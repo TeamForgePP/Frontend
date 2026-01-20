@@ -14,14 +14,14 @@ function KanbanPage() {
   
   // Получение данных канбан-доски
   const fetchKanbanData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
+      setError(null);
       const data = await KanbanService.getKanbanData();
       setKanbanData(data);
-      setError(null);
     } catch (err) {
+      console.error('Ошибка загрузки канбан-доски:', err);
       setError('Не удалось загрузить данные канбан-доски');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -29,14 +29,14 @@ function KanbanPage() {
 
   // Получение данных по конкретному спринту
   const fetchSprintData = async (sprintId) => {
-    setLoading(true);
     try {
+      setLoading(true);
+      setError(null);
       const data = await KanbanService.getSprintTasks(sprintId);
       setKanbanData(data);
-      setError(null);
     } catch (err) {
+      console.error('Ошибка загрузки спринта:', err);
       setError('Не удалось загрузить данные спринта');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -84,23 +84,28 @@ function KanbanPage() {
     return kanbanData.tasks.filter(task => task.status === status);
   };
 
-  if (loading) {
+  // Рендер загрузки
+  if (loading && !kanbanData) {
     return (
       <div className="projectMainContainer">
         <Header />
-        <div className="uniSection">
-          <div className="loading">Загрузка канбан-доски...</div>
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Загрузка канбан-доски...</p>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  // Рендер ошибки
+  if (error || !kanbanData) {
     return (
       <div className="projectMainContainer">
         <Header />
-        <div className="uniSection">
-          <div className="error">{error}</div>
+        <div className="error-container">
+          <h2>Ошибка</h2>
+          <p>{error || 'Данные канбан-доски не найдены'}</p>
+          <button onClick={fetchKanbanData}>Повторить попытку</button>
         </div>
       </div>
     );
