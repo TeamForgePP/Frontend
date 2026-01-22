@@ -3,39 +3,64 @@ import ComandCard from "./ComandCard";
 import plus from "../../../assets/plus.svg";
 import './ProjectComandEdit.css';
 import profilImg from '../../../assets/iconoir_profile-circle.svg';
+import { projectService } from "../../services/projectService"; 
 
 function ProjectComandEdit({ 
   team = [], 
+  projectId, 
   onRemoveMember, 
   onUpdateMember, 
   onTeamUpdate, 
   disabled = false 
 }) {
   const [localTeam, setLocalTeam] = useState([]);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   useEffect(() => {
     setLocalTeam(team.map(member => ({
       ...member,
-      // Убедимся, что у каждого участника есть name и surname
+      id: member.user_id || member.id,
       name: member.name || member.first_name || '',
       surname: member.surname || member.last_name || '',
       role: member.role || (Array.isArray(member.roles) ? member.roles.join(', ') : '')
     })));
   }, [team]);
 
-  const handleRemove = (id) => {
-    if (disabled || !onRemoveMember) return;
+  const handleRemoveMember = async (memberId) => {
+    if (!projectId || disabled || isRemoving) {
+      console.log('Условия не выполнены:', { projectId, disabled, isRemoving });
+      return;
+    }
     
-    // Удаляем из локального состояния
-    const newTeam = localTeam.filter(member => member.id !== id);
-    setLocalTeam(newTeam);
-    
-    // Уведомляем родителя
-    onRemoveMember(id);
-    
-    // Если есть onTeamUpdate, вызываем его
-    if (onTeamUpdate) {
-      onTeamUpdate(newTeam);
+    try {
+      setIsRemoving(true);
+      
+      console.log('Начинаем удаление участника:', { projectId, memberId });
+      
+      // Вызываем сервис удаления участника
+      await projectService.removeMember(projectId, memberId);
+      
+      // Обновляем локальное состояние
+      const updatedTeam = localTeam.filter(member => member.id !== memberId);
+      setLocalTeam(updatedTeam);
+      
+      // Уведомляем родительский компонент
+      if (onRemoveMember) {
+        onRemoveMember(memberId);
+      }
+      
+      // Если есть onTeamUpdate, вызываем его
+      if (onTeamUpdate) {
+        onTeamUpdate(updatedTeam);
+      }
+      
+      console.log('Участник успешно удален');
+      
+    } catch (error) {
+      console.error('Ошибка при удалении участника:', error);
+      alert(error.message || 'Не удалось исключить участника из команды');
+    } finally {
+      setIsRemoving(false);
     }
   };
 
@@ -101,9 +126,9 @@ function ProjectComandEdit({
               name={member.name}
               surname={member.surname}
               role={member.role}
-              onRemove={handleRemove}
+              onRemove={handleRemoveMember}
               onUpdate={handleUpdate}
-              disabled={disabled}
+              disabled={disabled || isRemoving}
             />
           ))
         ) : (

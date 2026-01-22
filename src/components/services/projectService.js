@@ -54,16 +54,28 @@ export const projectService = {
   // Удалить участника из проекта
   removeMember: async (projectId, userId) => {
     try {
-      const response = await api.delete(`/project/${projectId}/member/${userId}`);
+      console.log('Удаление участника:', { project_id: projectId, user_id: userId });
+      
+      const response = await api.post('/project/team/exclude', {
+        project_id: projectId,
+        user_id: userId
+      });
+      
+      console.log('Участник успешно удален:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Полная ошибка удаления участника:', error);
+      
       if (error.response?.status === 404) {
         throw new Error('Участник не найден в проекте');
       }
       if (error.response?.status === 403) {
         throw new Error('У вас нет прав для удаления участника');
       }
-      console.error('Ошибка удаления участника:', error);
+      if (error.response?.status === 400) {
+        throw new Error('Некорректные данные для удаления');
+      }
+      
       throw error;
     }
   },

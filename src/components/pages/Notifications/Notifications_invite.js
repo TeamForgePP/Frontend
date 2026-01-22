@@ -6,7 +6,7 @@ import { notificationService } from '../../services/notificationService';
 function Notifications_invite({
     isOpen,
     onClose,
-    invitationId
+    notificationId
 }) {
     const [invitation, setInvitation] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -14,20 +14,22 @@ function Notifications_invite({
     const [actionLoading, setActionLoading] = useState(false);
 
     useEffect(() => {
-        if (isOpen && invitationId) {
-            loadInvitation(invitationId);
+        if (isOpen && notificationId) {
+            loadInvitation(notificationId);
         } else {
             setInvitation(null);
             setError(null);
         }
-    }, [isOpen, invitationId]);
+    }, [isOpen, notificationId]);
 
     const loadInvitation = async (id) => {
         setLoading(true);
         setError(null);
         
         try {
-            const data = await notificationService.getInvitation(id);
+            console.log('Загружаем приглашение по ID уведомления:', id);
+            const data = await notificationService.getInvitationByNotificationId(id);
+            console.log('Данные приглашения:', data);
             setInvitation(data);
         } catch (error) {
             console.error('Ошибка загрузки приглашения:', error);
@@ -39,11 +41,12 @@ function Notifications_invite({
     };
 
     const handleAccept = async () => {
-        if (!invitationId || actionLoading) return;
+        if (!notificationId || actionLoading) return;
         
         setActionLoading(true);
         try {
-            await notificationService.acceptInvitation(invitationId);
+            console.log('Принимаем приглашение через ID уведомления:', notificationId);
+            await notificationService.acceptInvitation(notificationId);
             alert('Приглашение принято!');
             onClose();
         } catch (error) {
@@ -55,11 +58,12 @@ function Notifications_invite({
     };
 
     const handleDecline = async () => {
-        if (!invitationId || actionLoading) return;
+        if (!notificationId || actionLoading) return;
         
         setActionLoading(true);
         try {
-            await notificationService.declineInvitation(invitationId);
+            console.log('Отклоняем приглашение через ID уведомления:', notificationId);
+            await notificationService.declineInvitation(notificationId);
             alert('Приглашение отклонено');
             onClose();
         } catch (error) {
@@ -70,127 +74,93 @@ function Notifications_invite({
         }
     };
 
-    const handleClose = () => {
-        onClose();
-    };
-
     if (!isOpen) {
         return null;
     }
 
     return (
-        <div className="overlay" onClick={handleClose}>
+        <div className="overlay" onClick={onClose}>
             <div className="inviteContainer" onClick={e => e.stopPropagation()}>
-                <button 
-                    className="popup-close" 
-                    onClick={handleClose}
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        background: 'none',
-                        border: 'none',
-                        fontSize: '24px',
-                        cursor: 'pointer',
-                        color: '#666'
-                    }}
-                >
-                    ×
-                </button>
+                <button className="popup-close" onClick={onClose}>×</button>
                 
                 <h1>Приглашение в команду</h1>
                 
                 {loading ? (
-                    <div style={{textAlign: 'center', padding: '20px'}}>
+                    <div className="loading-message">
                         <p>Загрузка приглашения...</p>
                     </div>
                 ) : error ? (
-                    <div style={{textAlign: 'center', padding: '20px'}}>
-                        <p style={{color: 'red'}}>{error}</p>
-                        <button onClick={handleClose} className="ok_button">Закрыть</button>
+                    <div className="error-message">
+                        <p className="error-text">{error}</p>
+                        <button onClick={onClose} className="ok_button">Закрыть</button>
                     </div>
                 ) : invitation ? (
                     <div className="inviteContent">
-                        <div style={{marginBottom: '20px'}}>
-                            <h2 style={{marginBottom: '10px'}}>Проект: {invitation.project?.name || 'Без названия'}</h2>
-                            <p style={{color: '#666'}}>{invitation.project?.description || 'Нет описания'}</p>
+                        <div className="project-info">
+                            <h2>Проект: {invitation.project?.name || 'Без названия'}</h2>
+                            <p className="project-description">{invitation.project?.description || 'Нет описания'}</p>
                         </div>
                         
-                        <div style={{marginBottom: '20px'}}>
-                            <h3>Team Leader</h3>
-                            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                                <img src={profilImg} alt="Team Leader" style={{width: '40px'}} />
-                                <div>
-                                    <strong>{invitation.project?.team_leader?.first_name} {invitation.project?.team_leader?.last_name}</strong>
-                                    <div style={{display: 'flex', gap: '5px', marginTop: '5px'}}>
-                                        {invitation.project?.team_leader?.roles?.map(role => (
-                                            <span key={role} style={{
-                                                background: '#f0f0f0',
-                                                padding: '2px 8px',
-                                                borderRadius: '10px',
-                                                fontSize: '12px'
-                                            }}>{role}</span>
-                                        ))}
+                        {invitation.project?.team_leader && (
+                            <div className="team-section">
+                                <h3>Team Leader</h3>
+                                <div className="projectComandContainer">
+                                    <div className="participant-card">
+                                    <img src={profilImg} alt="Team Leader" />
+                                    <div className="leader-info">
+                                        <strong>{invitation.project.team_leader.first_name} {invitation.project.team_leader.last_name}</strong>
+                                        {invitation.project.team_leader.roles?.length > 0 && (
+                                            <div className="roles">
+                                                {invitation.project.team_leader.roles.map(role => (
+                                                    <span key={role} className="role-tag">{role}</span>
+                                                ))}
+                                                
+                                            </div>
+                                        )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                         
-                        <div style={{marginBottom: '30px'}}>
-                            <h3>Участники</h3>
-                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '10px'}}>
-                                {invitation.project?.participants?.map(participant => (
-                                    <div key={participant.id} style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '5px',
-                                        background: '#f8f8f8',
-                                        padding: '8px',
-                                        borderRadius: '8px'
-                                    }}>
-                                        <img src={profilImg} alt="Участник" style={{width: '30px'}} />
-                                        <div>
-                                            <div>{participant.first_name} {participant.last_name}</div>
-                                            <div style={{display: 'flex', gap: '3px', fontSize: '11px'}}>
-                                                {participant.roles?.map(role => (
-                                                    <span key={role}>{role}</span>
-                                                ))}
+                        {invitation.project?.participants && invitation.project.participants.length > 0 && (
+                            <div className="participants-section">
+                                <h3>Участники ({invitation.project.participants.length})</h3>
+                                <div className="projectComandContainer">
+                                    {invitation.project.participants.map(participant => (
+                                        <div key={participant.id} className="participant-card">
+                                            <img src={profilImg} alt="Участник" />
+                                            <div className="participant-info">
+                                                <p>{participant.first_name} {participant.last_name}</p>
+                                                {participant.roles?.length > 0 && (
+                                                    <div className="roles">
+                                                        {participant.roles.map(role => (
+                                                            <span key={role} className="role-tag small">{role}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                         
-                        {invitation.status === 'PENDING' && (
-                            <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
+                        {invitation.status === 'posted' && (
+                            <div className="buttonContainer">
                                 <button 
                                     onClick={handleAccept}
                                     disabled={actionLoading}
-                                    style={{
-                                        padding: '10px 30px',
-                                        background: '#4CAF50',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer'
-                                    }}
+                                    className="ok_button"
                                 >
-                                    {actionLoading ? '...' : 'Принять'}
+                                    {actionLoading ? 'Обработка...' : 'Принять'}
                                 </button>
                                 <button 
                                     onClick={handleDecline}
                                     disabled={actionLoading}
-                                    style={{
-                                        padding: '10px 30px',
-                                        background: '#f44336',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer'
-                                    }}
+                                    className="bad_button"
                                 >
-                                    {actionLoading ? '...' : 'Отклонить'}
+                                    {actionLoading ? 'Обработка...' : 'Отклонить'}
                                 </button>
                             </div>
                         )}

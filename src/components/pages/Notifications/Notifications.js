@@ -36,15 +36,17 @@ function Notifications({
     };
 
     const handleNotificationClick = async (notification) => {
-        // Помечаем как прочитанное локально
-        markAsReadLocally(notification.id);
-        
-        // Если это приглашение, открываем модалку
-        if (notification.type === "new_invite" && onInvitationClick) {
-            onInvitationClick(notification.invitation_id);
-            onClose(); // Закрываем список уведомлений
-        }
-    };
+    // Помечаем как прочитанное локально
+    markAsReadLocally(notification.id);
+    
+    // Если это приглашение, открываем модалку
+    if (notification.type === "new_invite" && onInvitationClick) {
+        console.log('ID уведомления:', notification.id);
+        // Передаем ID уведомления, а не invitation_id
+        onInvitationClick(notification.id);  // Это ID уведомления!
+        onClose();
+    }
+};
 
     const markAsReadLocally = (id) => {
         setNotifications(prev => prev.map(notif =>
