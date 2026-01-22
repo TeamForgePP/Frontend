@@ -1,4 +1,3 @@
-
 import api from '../../utils/api';
 
 export const notificationService = {
@@ -25,9 +24,9 @@ export const notificationService = {
   },
 
   // Получить информацию о приглашении
-  getInvitation: async (invitationId) => {
+  getInvitation: async (invitation_Id) => {
     try {
-      const response = await api.get(`/invitations/${invitationId}`);
+      const response = await api.get(`/invitations/${invitation_Id}`);
       return response.data;
     } catch (error) {
       console.error('Ошибка получения приглашения:', error);
@@ -35,10 +34,10 @@ export const notificationService = {
     }
   },
 
-  // Принять приглашение (предполагаем, что такая ручка есть)
-  acceptInvitation: async (invitationId) => {
+  // Принять приглашение
+  acceptInvitation: async (invitation_Id) => {
     try {
-      const response = await api.post(`/user/invitations/${invitationId}/accept`);
+      const response = await api.post(`/invitations/${invitation_Id}/accept`);
       return response.data;
     } catch (error) {
       console.error('Ошибка принятия приглашения:', error);
@@ -46,10 +45,10 @@ export const notificationService = {
     }
   },
 
-  // Отклонить приглашение (предполагаем, что такая ручка есть)
-  declineInvitation: async (invitationId) => {
+  // Отклонить приглашение
+  declineInvitation: async (invitation_Id) => {
     try {
-      const response = await api.post(`/api/user/invitations/${invitationId}/decline`);
+      const response = await api.post(`/invitations/${invitation_Id}/decline`);
       return response.data;
     } catch (error) {
       console.error('Ошибка отклонения приглашения:', error);

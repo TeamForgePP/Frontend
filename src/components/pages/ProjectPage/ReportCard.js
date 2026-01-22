@@ -7,7 +7,7 @@ function ReportCard({ report, onReportClick, onDeleteReport, canEdit = false }) 
     const [loading, setLoading] = useState(false);
 
     const openDeletePopUp = (e) => {
-        e.stopPropagation(); // Предотвращаем всплытие события
+        e.stopPropagation();
         setIsDeletePopUpOpen(true);
     };
 
@@ -30,7 +30,7 @@ function ReportCard({ report, onReportClick, onDeleteReport, canEdit = false }) 
     };
 
     const handleEditClick = (e) => {
-        e.stopPropagation(); // Предотвращаем всплытие события
+        e.stopPropagation();
         if (onReportClick) {
             onReportClick(report);
         }
@@ -51,7 +51,7 @@ function ReportCard({ report, onReportClick, onDeleteReport, canEdit = false }) 
         }
     };
 
-    // Получаем имя отправителя из отчета или используем значение по умолчанию
+    // Получаем имя отправителя
     const getSenderName = () => {
         return report.sender_name || report.author || 'Неизвестный автор';
     };

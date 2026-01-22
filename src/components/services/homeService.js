@@ -4,7 +4,7 @@ export const homeService = {
   // Получить список проектов
   getProjects: async () => {
     try {
-      const response = await api.get('/projects');
+      const response = await api.get('/main');
       return response.data;
     } catch (error) {
       console.error('Ошибка получения проектов:', error);
@@ -15,7 +15,7 @@ export const homeService = {
   // Создать новый проект
   createProject: async (projectData) => {
     try {
-      const response = await api.post('/projects', projectData);
+      const response = await api.post('/main', projectData);
       return response.data;
     } catch (error) {
       if (error.response?.status === 409) {
@@ -32,7 +32,7 @@ export const homeService = {
   // Удалить проект
   deleteProject: async (projectId) => {
     try {
-      const response = await api.delete(`/projects/${projectId}`);
+      const response = await api.delete(`/main/${projectId}`);
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) {
@@ -49,7 +49,7 @@ export const homeService = {
   // Покинуть проект
   leaveProject: async (projectId) => {
     try {
-      const response = await api.post(`/projects/${projectId}/leave`);
+      const response = await api.post(`/main/${projectId}/leave`);
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) {
@@ -66,7 +66,7 @@ export const homeService = {
   // Получить пользователей для команды (новая ручка)
   getUsersForTeam: async () => {
     try {
-      const response = await api.get('/projects/users-for-team');
+      const response = await api.get('/main/users-for-team');
       return response.data;
     } catch (error) {
       console.error('Ошибка получения пользователей для команды:', error);

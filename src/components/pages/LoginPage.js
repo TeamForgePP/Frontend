@@ -77,7 +77,7 @@ const handleSubmit = async (e) => {
         
     } catch (error) {
         console.error("Ошибка:", error);
-        setErrorMessage("Ошибка входа: " + error.message);
+        setErrorMessage("Ошибка входа");
     } finally {
         setIsLoading(false);
     }

@@ -57,7 +57,7 @@ function ProjectCard({ project, onProjectDeleted }) {
     };
 
     const handleOpenProject = () => {
-        navigate(`/project/${project.id}`);
+        navigate(`/project`);
     };
 
     const handleDeleteProject = async () => {

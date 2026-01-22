@@ -1,3 +1,4 @@
+
 import api from '../../utils/api';
 
 class KanbanService {
@@ -15,7 +16,7 @@ class KanbanService {
   // Получение тасок по конкретному спринту
   getSprintTasks = async (sprintId) => {
     try {
-      const response = await api.get(`/kanban/${sprintId}`);
+      const response = await api.get(`/kanban/sprints/${sprintId}`);
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении тасок спринта:', error);
@@ -26,10 +27,15 @@ class KanbanService {
   // Создание новой задачи
   createNewTask = async (taskData) => {
     try {
+      // Добавим логирование для отладки
+      console.log('Отправка данных задачи на сервер:', taskData);
+      
       const response = await api.post('/kanban/new-task', taskData);
+      console.log('Ответ сервера:', response.data);
       return response.data;
     } catch (error) {
       console.error('Ошибка при создании задачи:', error);
+      console.error('Детали ошибки:', error.response?.data);
       throw error;
     }
   };
@@ -45,10 +51,21 @@ class KanbanService {
     }
   };
 
+  // Получение количества спринтов
+  getNumberOfSprints = async () => {
+    try {
+      const response = await api.get('/kanban/sprints');
+      return response.data;
+    } catch (error) {
+      console.error('Ошибка при получении количества спринтов:', error);
+      throw error;
+    }
+  };
+
   // Получение деталей задачи
   getTaskDetails = async (taskId) => {
     try {
-      const response = await api.get(`/projects/kanban/${taskId}`);
+      const response = await api.get(`/kanban/tasks/${taskId}`);
       return response.data;
     } catch (error) {
       console.error('Ошибка при получении деталей задачи:', error);
@@ -73,10 +90,13 @@ class KanbanService {
   // Обновление задачи
   updateTask = async (taskId, taskData) => {
     try {
+      console.log('Обновление задачи:', taskId, taskData);
       const response = await api.put(`/projects/kanban/${taskId}`, taskData);
+      console.log('Ответ при обновлении:', response.data);
       return response.data;
     } catch (error) {
       console.error('Ошибка при обновлении задачи:', error);
+      console.error('Детали ошибки:', error.response?.data);
       throw error;
     }
   };

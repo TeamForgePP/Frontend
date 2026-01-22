@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
 import "./ProjectPage.css";
 import Header from "../../Header/Header";
 import ProjectComandEdit from "../../Main/Project/ProjectComandEdit";
@@ -10,9 +9,7 @@ import NewReport from "./NewReport";
 import { projectService } from "../../services/projectService";
 
 function ProjectPage() {
-  const { projectId } = useParams();
   const [projectData, setProjectData] = useState(null);
-  const [isDeletePopUpOpen, setIsDeletePopUpOpen] = useState(false);
   const [isDonePopUpOpen, setIsDonePopUpOpen] = useState(false);
   const [isReportPopUpOpen, setIsReportPopUpOpen] = useState(false);
   const [currentReport, setCurrentReport] = useState(null);
@@ -37,7 +34,11 @@ function ProjectPage() {
       setLoading(true);
       setError(null);
       
-      const data = await projectService.getProjectInfo(projectId);
+      console.log('Загружаем текущий проект...');
+      
+      const data = await projectService.getProjectInfo();
+      
+      console.log('Данные проекта получены:', data);
       
       setProjectData(data);
       
@@ -50,21 +51,28 @@ function ProjectPage() {
       })) || [];
       
       setEditForm({
-        project_name: data.project_name,
-        git: data.git || "",
+        project_name: data.project_name || data.name || "",
+        git: data.git || data.github_url || "",
         description: data.description || "",
         team: teamFormatted
       });
       
       setTeam(teamFormatted);
       
+      
+      // Сохраняем ID проекта в localStorage для Header
+      if (data.project_id) {
+        localStorage.setItem('currentProjectId', data.project_id);
+        console.log('ProjectId сохранен в localStorage:', data.project_id);
+      }
+      
     } catch (err) {
       console.error('Ошибка загрузки проекта:', err);
-      setError('Не удалось загрузить данные проекта');
+      setError('Не удалось загрузить данные проекта: ' + (err.message || ''));
     } finally {
       setLoading(false);
     }
-  }, [projectId]);
+  }, []);
 
   useEffect(() => {
     loadProjectData();
@@ -88,8 +96,8 @@ function ProjectPage() {
         })) || [];
         
         setEditForm({
-          project_name: projectData.project_name,
-          git: projectData.git || "",
+          project_name: projectData.project_name || projectData.name || "",
+          git: projectData.git || projectData.github_url || "",
           description: projectData.description || "",
           team: teamFormatted
         });
@@ -105,27 +113,35 @@ function ProjectPage() {
         await loadProjectData();
     } catch (err) {
         console.error('Ошибка удаления отчета:', err);
+        alert('Ошибка удаления отчета: ' + err.message);
     } finally {
         setLoading(false);
     }
   };
 
-  // Сохранение изменений
+  // Сохранение изменений - ИСПРАВЛЕНО
   const handleSaveChanges = async () => {
     try {
       setLoading(true);
       
+      console.log('projectData:', projectData);
+      console.log('editForm:', editForm);
+      
+      if (!projectData || !projectData.project_id) {
+        throw new Error('Проект не загружен или не имеет ID');
+      }
+      
+      // Формируем данные для отправки
       const editData = {
-        project_id: projectId,
-        project_name: editForm.project_name,
-        git: editForm.git,
+        project_id: projectData.project_id, 
+        name: editForm.project_name, 
+        github_url: editForm.git, 
         description: editForm.description,
-        deleted: deletedMembers.map(id => ({ id })),
-        invited: invitedMembers.map(member => ({
-          id: member.id,
-          roles: member.roles || [member.role]
-        }))
+        deleted: deletedMembers, 
+        invited: invitedMembers.map(member => member.id) 
       };
+      
+      console.log('Отправляемые данные:', editData);
       
       await projectService.editProject(editData);
       
@@ -134,8 +150,10 @@ function ProjectPage() {
       setDeletedMembers([]);
       setInvitedMembers([]);
       
+      
     } catch (err) {
       console.error('Ошибка сохранения:', err);
+      alert('Ошибка при сохранении: ' + (err.message || 'Неизвестная ошибка'));
     } finally {
       setLoading(false);
     }
@@ -153,8 +171,8 @@ function ProjectPage() {
       })) || [];
       
       setEditForm({
-        project_name: projectData.project_name,
-        git: projectData.git || "",
+        project_name: projectData.project_name || projectData.name || "",
+        git: projectData.git || projectData.github_url || "",
         description: projectData.description || "",
         team: teamFormatted
       });
@@ -220,36 +238,60 @@ function ProjectPage() {
     setIsReportPopUpOpen(true);
   };
 
-  const closeReportPopUp = () => {
+const closeReportPopUp = () => {
+    console.log('Закрытие попапа отчета');
     setIsReportPopUpOpen(false);
     setCurrentReport(null);
-  };
+};
 
-  const handleReportSubmit = async (reportData) => {
+const handleReportSubmit = async (reportData) => {
+    console.log('Сохранение отчета начато');
+    
+    // 1. Немедленно закрываем попап
+    closeReportPopUp();
+    
+    // 2. Показываем индикатор загрузки
+    setLoading(true);
+    
     try {
-      setLoading(true);
-      
-      if (currentReport) {
-        await projectService.editReport({
-          ...reportData,
-          report_id: currentReport.id
-        });
-      } else {
-        await projectService.addReport({
-          ...reportData,
-          project_id: projectId
-        });
-      }
-      
-      await loadProjectData();
-      closeReportPopUp();
-      
-    } catch (err) {
-      console.error('Ошибка сохранения отчета:', err);
+        // 3. Формируем данные для отправки
+        const reportPayload = {
+            project_id: projectData?.project_id,
+            title: reportData.title.trim(),
+            description: reportData.description.trim(),
+            teacher_note: reportData.teacher_note?.trim() || '',
+        };
+        
+        // 4. Отправляем запрос
+        if (currentReport) {
+            reportPayload.report_id = currentReport.id;
+            await projectService.editReport(reportPayload);
+        } else {
+            await projectService.addReport(reportPayload);
+        }
+        
+        // 5. Обновляем список отчетов
+        await loadProjectData();
+        
+        // 6. Уведомление об успехе (можно сделать менее навязчивым)
+        console.log('Отчет сохранен успешно');
+        
+    } catch (error) {
+        console.error('Ошибка при сохранении отчета:', error);
+        // Показываем ошибку, но не блокируем интерфейс
+        alert(`Не удалось сохранить отчет: ${error.message}`);
+        
+        // Все равно пытаемся обновить данные
+        try {
+            await loadProjectData();
+        } catch (refreshError) {
+            console.error('Не удалось обновить данные:', refreshError);
+        }
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   // Открытие/закрытие окна добавления студентов
   const openAddStudents = async () => {
@@ -262,20 +304,15 @@ function ProjectPage() {
 
   // Добавление нового участника
   const handleAddStudent = (student) => {
-    setInvitedMembers(prev => [...prev, {
+    const newMember = {
       id: student.id || `temp_${Date.now()}`,
       name: student.name,
       surname: student.surname,
       role: student.roles ? student.roles.join(', ') : student.role,
       roles: student.roles || []
-    }]);
-    
-    const newMember = {
-      id: student.id || `temp_${Date.now()}`,
-      name: student.name,
-      surname: student.surname,
-      role: student.roles ? student.roles.join(', ') : student.role
     };
+    
+    setInvitedMembers(prev => [...prev, newMember]);
     
     setEditForm(prev => ({
       ...prev,
@@ -300,11 +337,13 @@ function ProjectPage() {
   const handleDoneProject = async () => {
     try {
       setLoading(true);
-      await projectService.finishProject(projectId);
+      await projectService.finishProject(projectData?.project_id);
       setIsDonePopUpOpen(false);
       loadProjectData();
+      alert('Проект завершен!');
     } catch (err) {
       console.error('Ошибка завершения проекта:', err);
+      alert('Ошибка завершения проекта: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -353,7 +392,7 @@ function ProjectPage() {
                 placeholder="Название проекта"
               />
             ) : (
-              <h1 className="projectHeaderText">{projectData.project_name}</h1>
+              <h1 className="projectHeaderText">{projectData.project_name || projectData.name}</h1>
             )}
             
             <div className="projectHeaderBtns">
@@ -436,7 +475,7 @@ function ProjectPage() {
               />
             ) : (
               <p className="git-link">
-                {projectData.git || 'Ссылка на Git не указана'}
+                {projectData.git || projectData.github_url || 'Ссылка на Git не указана'}
               </p>
             )}
           </div>
@@ -460,10 +499,10 @@ function ProjectPage() {
             )}
           </div>
 
-          {/* Отчеты - просто компонент Report с передачей пропсов */}
+          {/* Отчеты */}
           <Report 
             reports={projectData.reports || []}
-            projectId={projectId}
+            projectId={projectData.project_id}
             canEdit={projectData.allowed_actions?.reports}
             onReportUpdate={loadProjectData}
             onReportClick={openEditReport}
@@ -478,15 +517,15 @@ function ProjectPage() {
         isOpen={isAddStudentsOpen}
         onClose={closeAddStudents}
         onAddStudent={handleAddStudent}
-        projectId={projectId}
+        projectId={projectData?.project_id}
       />
 
-      <NewReport
+      {/* <NewReport
         isOpen={isReportPopUpOpen}
         onClose={closeReportPopUp}
         reportData={currentReport}
         onSubmit={handleReportSubmit}
-      />
+      /> */}
 
       <UniPopUp 
         isOpen={isDonePopUpOpen}

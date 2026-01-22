@@ -31,7 +31,7 @@ function Notifications_invite({
             setInvitation(data);
         } catch (error) {
             console.error('Ошибка загрузки приглашения:', error);
-            setError(error.response?.data?.message || 'Не удалось загрузить приглашение');
+            setError('Не удалось загрузить приглашение');
             setInvitation(null);
         } finally {
             setLoading(false);
@@ -45,10 +45,10 @@ function Notifications_invite({
         try {
             await notificationService.acceptInvitation(invitationId);
             alert('Приглашение принято!');
-            if (onClose) onClose();
+            onClose();
         } catch (error) {
             console.error('Ошибка принятия приглашения:', error);
-            alert(error.response?.data?.message || 'Не удалось принять приглашение');
+            alert('Не удалось принять приглашение');
         } finally {
             setActionLoading(false);
         }
@@ -61,13 +61,17 @@ function Notifications_invite({
         try {
             await notificationService.declineInvitation(invitationId);
             alert('Приглашение отклонено');
-            if (onClose) onClose();
+            onClose();
         } catch (error) {
             console.error('Ошибка отклонения приглашения:', error);
-            alert(error.response?.data?.message || 'Не удалось отклонить приглашение');
+            alert('Не удалось отклонить приглашение');
         } finally {
             setActionLoading(false);
         }
+    };
+
+    const handleClose = () => {
+        onClose();
     };
 
     if (!isOpen) {
@@ -75,69 +79,81 @@ function Notifications_invite({
     }
 
     return (
-        <div className="overlay">
-            <div className="inviteContainer">
-                <div className="inviteHeader">
-                    <h1>Вступление в команду</h1>
-                    <button className="closeButton" onClick={onClose}>×</button>
-                </div>
+        <div className="overlay" onClick={handleClose}>
+            <div className="inviteContainer" onClick={e => e.stopPropagation()}>
+                <button 
+                    className="popup-close" 
+                    onClick={handleClose}
+                    style={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        background: 'none',
+                        border: 'none',
+                        fontSize: '24px',
+                        cursor: 'pointer',
+                        color: '#666'
+                    }}
+                >
+                    ×
+                </button>
+                
+                <h1>Приглашение в команду</h1>
                 
                 {loading ? (
-                    <div className="loadingState">
-                        <div className="spinner"></div>
-                        <p>Загрузка информации о приглашении...</p>
+                    <div style={{textAlign: 'center', padding: '20px'}}>
+                        <p>Загрузка приглашения...</p>
                     </div>
                 ) : error ? (
-                    <div className="errorState">
-                        <p className="errorText">{error}</p>
-                        <button className="closeBtn" onClick={onClose}>Закрыть</button>
+                    <div style={{textAlign: 'center', padding: '20px'}}>
+                        <p style={{color: 'red'}}>{error}</p>
+                        <button onClick={handleClose} className="ok_button">Закрыть</button>
                     </div>
                 ) : invitation ? (
                     <div className="inviteContent">
-                        <div className="projectInfo">
-                            <h2>{invitation.project?.name || 'Без названия'}</h2>
-                            <p className="projectDescription">
-                                {invitation.project?.description || 'Нет описания'}
-                            </p>
-                            
-                            <div className="statusBadge">
-                                Статус: <span className={`status ${invitation.status?.toLowerCase()}`}>
-                                    {getStatusText(invitation.status)}
-                                </span>
-                            </div>
+                        <div style={{marginBottom: '20px'}}>
+                            <h2 style={{marginBottom: '10px'}}>Проект: {invitation.project?.name || 'Без названия'}</h2>
+                            <p style={{color: '#666'}}>{invitation.project?.description || 'Нет описания'}</p>
                         </div>
                         
-                        <div className="teamSection">
+                        <div style={{marginBottom: '20px'}}>
                             <h3>Team Leader</h3>
-                            <div className="teamLeaderCard">
-                                <img src={profilImg} alt="Team Leader" />
-                                <div className="leaderInfo">
-                                    <h4>
-                                        {invitation.project?.team_leader?.first_name || ''} 
-                                        {invitation.project?.team_leader?.last_name || ''}
-                                    </h4>
-                                    <div className="roles">
+                            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                <img src={profilImg} alt="Team Leader" style={{width: '40px'}} />
+                                <div>
+                                    <strong>{invitation.project?.team_leader?.first_name} {invitation.project?.team_leader?.last_name}</strong>
+                                    <div style={{display: 'flex', gap: '5px', marginTop: '5px'}}>
                                         {invitation.project?.team_leader?.roles?.map(role => (
-                                            <span key={role} className="roleTag">{role}</span>
+                                            <span key={role} style={{
+                                                background: '#f0f0f0',
+                                                padding: '2px 8px',
+                                                borderRadius: '10px',
+                                                fontSize: '12px'
+                                            }}>{role}</span>
                                         ))}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div className="participantsSection">
-                            <h3>Участники ({invitation.project?.participants?.length || 0})</h3>
-                            <div className="participantsList">
+                        <div style={{marginBottom: '30px'}}>
+                            <h3>Участники</h3>
+                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '10px'}}>
                                 {invitation.project?.participants?.map(participant => (
-                                    <div key={participant.id} className="participantCard">
-                                        <img src={profilImg} alt="Участник" />
-                                        <div className="participantInfo">
-                                            <p>
-                                                {participant.first_name} {participant.last_name}
-                                            </p>
-                                            <div className="roles">
+                                    <div key={participant.id} style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        background: '#f8f8f8',
+                                        padding: '8px',
+                                        borderRadius: '8px'
+                                    }}>
+                                        <img src={profilImg} alt="Участник" style={{width: '30px'}} />
+                                        <div>
+                                            <div>{participant.first_name} {participant.last_name}</div>
+                                            <div style={{display: 'flex', gap: '3px', fontSize: '11px'}}>
                                                 {participant.roles?.map(role => (
-                                                    <span key={role} className="roleTag small">{role}</span>
+                                                    <span key={role}>{role}</span>
                                                 ))}
                                             </div>
                                         </div>
@@ -147,20 +163,34 @@ function Notifications_invite({
                         </div>
                         
                         {invitation.status === 'PENDING' && (
-                            <div className="invitationActions">
+                            <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
                                 <button 
-                                    className="acceptButton" 
                                     onClick={handleAccept}
                                     disabled={actionLoading}
+                                    style={{
+                                        padding: '10px 30px',
+                                        background: '#4CAF50',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer'
+                                    }}
                                 >
-                                    {actionLoading ? 'Обработка...' : 'Принять приглашение'}
+                                    {actionLoading ? '...' : 'Принять'}
                                 </button>
                                 <button 
-                                    className="declineButton" 
                                     onClick={handleDecline}
                                     disabled={actionLoading}
+                                    style={{
+                                        padding: '10px 30px',
+                                        background: '#f44336',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer'
+                                    }}
                                 >
-                                    {actionLoading ? 'Обработка...' : 'Отклонить'}
+                                    {actionLoading ? '...' : 'Отклонить'}
                                 </button>
                             </div>
                         )}
@@ -170,16 +200,5 @@ function Notifications_invite({
         </div>
     );
 }
-
-// Вспомогательные функции
-const getStatusText = (status) => {
-    const statusMap = {
-        'PENDING': 'Ожидает ответа',
-        'ACCEPTED': 'Принято',
-        'DECLINED': 'Отклонено',
-        'EXPIRED': 'Истекло'
-    };
-    return statusMap[status] || status;
-};
 
 export default Notifications_invite;

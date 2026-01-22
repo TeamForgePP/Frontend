@@ -14,7 +14,7 @@
 
 .newTaskHeader{
     display: flex;
-    align-content: center;
+    justify-content: center;
     align-items: center;
     gap: 1em;
 }
@@ -49,11 +49,14 @@
 }
 
 
-select{
+select, input, textarea{
     background-color: var(--grey-back);
     border: none;
     padding: .5em;
     border-radius: 1em;
+    font-family: var(--main-font);
+    font-weight: 600;
+    font-size: 16px;
 }
 
 select:focus, select:active{
@@ -64,5 +67,30 @@ option{
     background-color: var(--grey-back);
     border: 0;
     border-radius: 1em;
+    font-family: var(--main-font);
+    font-weight: 600;
+    font-size: 16px;
 }
 
+.read-only-field {
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.form-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}

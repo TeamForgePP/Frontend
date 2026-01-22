@@ -37,7 +37,7 @@ export const userService = {
   // Выход из аккаунта
   logout: async () => {
     try {
-      const response = await api.post('/user/profile/logout');
+      const response = await api.post('/auth/user/logout');
       return response.data;
     } catch (error) {
       console.error('Ошибка выхода:', error);

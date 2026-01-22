@@ -42,11 +42,7 @@ function Notifications({
         // Если это приглашение, открываем модалку
         if (notification.type === "new_invite" && onInvitationClick) {
             onInvitationClick(notification.invitation_id);
-        }
-        
-        // Закрываем список уведомлений
-        if (onClose) {
-            onClose();
+            onClose(); // Закрываем список уведомлений
         }
     };
 
@@ -83,9 +79,9 @@ function Notifications({
             
             {loading ? (
                 <div className="loading-container">
-              <div className="spinner"></div>
-              <p>Загрузка уведомлений...</p>
-            </div>
+                    <div className="spinner"></div>
+                    <p>Загрузка уведомлений...</p>
+                </div>
             ) : notifications.length === 0 ? (
                 <div className="empty"><p>Нет уведомлений</p></div>
             ) : (
@@ -95,6 +91,7 @@ function Notifications({
                             key={notification.id}
                             className={`notification ${notification.is_read ? 'read' : 'unread'}`}
                             onClick={() => handleNotificationClick(notification)}
+                            style={{ cursor: 'pointer' }}
                         >
                             <div className="notificationHeader">
                                 <div className={`notificationCircle ${notification.type}`}></div>
@@ -106,7 +103,7 @@ function Notifications({
                                     {formatDate(notification.created_at)}
                                 </span>
                                 {notification.type === "new_invite" && !notification.is_read && (
-                                    <span className="invitationBadge">Новое приглашение</span>
+                                    <span className="invitationBadge">Приглашение</span>
                                 )}
                             </div>
                         </div>

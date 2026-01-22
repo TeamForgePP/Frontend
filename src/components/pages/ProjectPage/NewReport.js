@@ -2,33 +2,44 @@ import React, { useState, useEffect } from "react";
 import "./NewReport.css";
 
 function NewReport({ isOpen, onClose, reportData = null, onSubmit, loading = false }) {
-    const [formData, setFormData] = useState({
-        name: "",
+     const [formData, setFormData] = useState({
+        title: "",
         description: "",
-        fileName: ""
+        teacher_note: "",
+        fileName: "",
+        file: null
     });
 
-    // Заполняем форму данными отчета при открытии или изменении reportData
     useEffect(() => {
         if (reportData) {
             setFormData({
-                name: reportData.name || "",
+                title: reportData.title || reportData.name || "",
                 description: reportData.description || "",
-                fileName: reportData.fileName || reportData.file_name || ""
+                teacher_note: reportData.teacher_note || "",
+                fileName: reportData.fileName || reportData.file_name || "",
+                file: null
             });
         } else {
-            // Сбрасываем форму при создании нового отчета
             setFormData({
-                name: "",
+                title: "",
                 description: "",
-                fileName: ""
+                teacher_note: "",
+                fileName: "",
+                file: null
             });
         }
     }, [reportData, isOpen]);
 
-    if (!isOpen) {
-        return null;
-    }
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setFormData(prev => ({
+                ...prev,
+                file: file,
+                fileName: file.name
+            }));
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -36,16 +47,6 @@ function NewReport({ isOpen, onClose, reportData = null, onSubmit, loading = fal
             ...prev,
             [name]: value
         }));
-    };
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setFormData(prev => ({
-                ...prev,
-                fileName: file.name
-            }));
-        }
     };
 
     const handleSubmit = (e) => {
@@ -70,13 +71,13 @@ function NewReport({ isOpen, onClose, reportData = null, onSubmit, loading = fal
                     
                     <form className="NewProjectMain" onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label htmlFor="name">Название</label>
+                            <label htmlFor="title">Название</label>
                             <input 
                                 className="inputText"
-                                id="name"
-                                name="name"
+                                id="title"                           
+                                name="title"                         
                                 placeholder="Введите название отчёта"
-                                value={formData.name}
+                                value={formData.title}               
                                 onChange={handleInputChange}
                                 required
                                 disabled={loading}
@@ -94,6 +95,20 @@ function NewReport({ isOpen, onClose, reportData = null, onSubmit, loading = fal
                                 onChange={handleInputChange}
                                 rows={4}
                                 required
+                                disabled={loading}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="teacher_note">Примечание преподавателя</label>
+                            <textarea 
+                                className="textAreaText"
+                                id="teacher_note"
+                                name="teacher_note"
+                                placeholder="Примечание (необязательно)"
+                                value={formData.teacher_note}
+                                onChange={handleInputChange}
+                                rows={2}
                                 disabled={loading}
                             />
                         </div>

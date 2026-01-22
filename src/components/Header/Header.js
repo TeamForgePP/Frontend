@@ -38,13 +38,24 @@ function Header() {
     };
 
     const handleInvitationClick = (invitationId) => {
-        console.log('Открываем приглашение:', invitationId);
+        console.log('Открываем приглашение ID:', invitationId);
+        if (!invitationId) {
+            console.error('Нет ID приглашения!');
+            return;
+        }
+        
         setSelectedInvitationId(invitationId);
         setIsOpenInvite(true);
         setIsOpenNotifications(false);
+        
+        // Сразу уменьшаем счетчик локально
+        if (unreadCount > 0) {
+            setUnreadCount(prev => Math.max(0, prev - 1));
+        }
     };
 
     const handleInviteClose = () => {
+        console.log('Закрытие приглашения');
         setIsOpenInvite(false);
         setSelectedInvitationId(null);
         // Обновляем счетчик после действий с приглашением

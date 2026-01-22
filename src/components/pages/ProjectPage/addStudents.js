@@ -16,7 +16,7 @@ function AddStudents({
     const [error, setError] = useState(null);
 
     // Список доступных ролей
-    const availableRoles = ["Frontend", "Backend", "Дизайнер", "Тестировщик", "Аналитик"];
+    const availableRoles = ["frontend", "backend", "business_analyst", "devops", "manager", "product_manager"];
 
     // Загрузка доступных студентов
     useEffect(() => {
