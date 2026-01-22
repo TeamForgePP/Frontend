@@ -23,21 +23,21 @@ export const notificationService = {
     }
   },
 
-  // Получить информацию о приглашении
-  getInvitation: async (invitation_Id) => {
+  // Получить информацию о приглашении по ID уведомления
+  getInvitationByNotificationId: async (notificationId) => {
     try {
-      const response = await api.get(`/invitations/${invitation_Id}`);
+      const response = await api.get(`/invitations/${notificationId}`);
       return response.data;
     } catch (error) {
-      console.error('Ошибка получения приглашения:', error);
+      console.error('Ошибка получения приглашения по ID уведомления:', error);
       throw error;
     }
   },
 
   // Принять приглашение
-  acceptInvitation: async (invitation_Id) => {
+  acceptInvitation: async (notificationId) => {
     try {
-      const response = await api.post(`/invitations/${invitation_Id}/accept`);
+      const response = await api.post(`/invitations/${notificationId}/accept`);
       return response.data;
     } catch (error) {
       console.error('Ошибка принятия приглашения:', error);
@@ -46,9 +46,9 @@ export const notificationService = {
   },
 
   // Отклонить приглашение
-  declineInvitation: async (invitation_Id) => {
+  declineInvitation: async (notificationId) => {
     try {
-      const response = await api.post(`/invitations/${invitation_Id}/decline`);
+      const response = await api.post(`/invitations/${notificationId}/reject`);
       return response.data;
     } catch (error) {
       console.error('Ошибка отклонения приглашения:', error);

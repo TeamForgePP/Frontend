@@ -121,43 +121,47 @@ function ProjectPage() {
 
   // Сохранение изменений - ИСПРАВЛЕНО
   const handleSaveChanges = async () => {
-    try {
-      setLoading(true);
-      
-      console.log('projectData:', projectData);
-      console.log('editForm:', editForm);
-      
-      if (!projectData || !projectData.project_id) {
-        throw new Error('Проект не загружен или не имеет ID');
-      }
-      
-      // Формируем данные для отправки
-      const editData = {
-        project_id: projectData.project_id, 
-        name: editForm.project_name, 
-        github_url: editForm.git, 
-        description: editForm.description,
-        deleted: deletedMembers, 
-        invited: invitedMembers.map(member => member.id) 
-      };
-      
-      console.log('Отправляемые данные:', editData);
-      
-      await projectService.editProject(editData);
-      
-      await loadProjectData();
-      setIsEditing(false);
-      setDeletedMembers([]);
-      setInvitedMembers([]);
-      
-      
-    } catch (err) {
-      console.error('Ошибка сохранения:', err);
-      alert('Ошибка при сохранении: ' + (err.message || 'Неизвестная ошибка'));
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    
+    console.log('projectData:', projectData);
+    console.log('editForm:', editForm);
+    console.log('deletedMembers:', deletedMembers);
+    console.log('invitedMembers:', invitedMembers);
+    
+    if (!projectData || !projectData.project_id) {
+      throw new Error('Проект не загружен или не имеет ID');
     }
-  };
+    
+    // Формируем данные для отправки - теперь только новые участники
+    // Удаленные участники уже обработаны через отдельный API вызов
+    const editData = {
+      project_id: projectData.project_id, 
+      name: editForm.project_name, 
+      github_url: editForm.git, 
+      description: editForm.description,
+      invited: invitedMembers.map(member => member.id) // Только новые участники
+      // deleted: deletedMembers - больше не нужно, т.к. удаление через отдельный API
+    };
+    
+    console.log('Отправляемые данные (редактирование):', editData);
+    
+    // Отправляем только изменения по проекту (название, описание, git, новые участники)
+    await projectService.editProject(editData);
+    
+    await loadProjectData();
+    setIsEditing(false);
+    setDeletedMembers([]);
+    setInvitedMembers([]);
+    
+    
+  } catch (err) {
+    console.error('Ошибка сохранения:', err);
+    alert('Ошибка при сохранении: ' + (err.message || 'Неизвестная ошибка'));
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Отмена редактирования
   const handleCancelEdit = () => {
@@ -193,18 +197,14 @@ function ProjectPage() {
   };
 
   // Удаление участника
-  const handleRemoveMember = async (memberId) => {
-    try {
-      setDeletedMembers(prev => [...prev, memberId]);
-      setEditForm(prev => ({
-        ...prev,
-        team: prev.team.filter(member => member.id !== memberId)
-      }));
-      setTeam(prev => prev.filter(member => member.id !== memberId));
-    } catch (err) {
-      console.error('Ошибка удаления участника:', err);
-    }
-  };
+  const handleRemoveMember = (memberId) => {
+  setDeletedMembers(prev => [...prev, memberId]);
+  setEditForm(prev => ({
+    ...prev,
+    team: prev.team.filter(member => member.id !== memberId)
+  }));
+  setTeam(prev => prev.filter(member => member.id !== memberId));
+};
 
   // Обновление участника
   const handleUpdateMember = (memberId, updates) => {
@@ -454,6 +454,7 @@ const handleReportSubmit = async (reportData) => {
             
             <ProjectComandEdit
               team={isEditing ? editForm.team : team}
+              projectId={projectData.project_id} // <-- Добавьте эту строку
               onRemoveMember={handleRemoveMember}
               onUpdateMember={handleUpdateMember}
               onTeamUpdate={isEditing ? handleTeamUpdate : undefined}

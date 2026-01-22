@@ -12,7 +12,7 @@ function Header() {
     const [isOpenNotifications, setIsOpenNotifications] = useState(false);
     const [isOpenInvite, setIsOpenInvite] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
-    const [selectedInvitationId, setSelectedInvitationId] = useState(null);
+    const [selectedNotificationId, setSelectedNotificationId] = useState(null); // Исправлено
     const [notificationsLoading, setNotificationsLoading] = useState(false);
 
     // Загружаем количество непрочитанных при монтировании
@@ -37,27 +37,17 @@ function Header() {
         }
     };
 
-    const handleInvitationClick = (invitationId) => {
-        console.log('Открываем приглашение ID:', invitationId);
-        if (!invitationId) {
-            console.error('Нет ID приглашения!');
-            return;
-        }
-        
-        setSelectedInvitationId(invitationId);
+    const handleInvitationClick = (notificationId) => {
+        console.log('Открываем приглашение по ID уведомления:', notificationId);
+        setSelectedNotificationId(notificationId); // Исправлено
         setIsOpenInvite(true);
         setIsOpenNotifications(false);
-        
-        // Сразу уменьшаем счетчик локально
-        if (unreadCount > 0) {
-            setUnreadCount(prev => Math.max(0, prev - 1));
-        }
     };
 
     const handleInviteClose = () => {
         console.log('Закрытие приглашения');
         setIsOpenInvite(false);
-        setSelectedInvitationId(null);
+        setSelectedNotificationId(null); // Исправлено
         // Обновляем счетчик после действий с приглашением
         loadUnreadCount();
     };
@@ -131,7 +121,7 @@ function Header() {
             <Notifications_invite
                 isOpen={isOpenInvite}
                 onClose={handleInviteClose}
-                invitationId={selectedInvitationId}
+                notificationId={selectedNotificationId}
             />
         </header>
     );

@@ -53,3 +53,12 @@
     border-radius: 2em;
     margin-top: 10px;
 }
+
+.participant-card{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 1em;
+    border-radius: .5em;
+}
