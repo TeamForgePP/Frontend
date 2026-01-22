@@ -1,0 +1,113 @@
+.popUpNewProject{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 45px;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 99;
+    display: block;
+    border-radius: 45px;
+    overflow: hidden; 
+    width: 70vw;
+    
+    
+}
+
+.popUpNewProjectContent  {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+
+.popUpNewProjectContent h2  {
+    text-align: center;
+}
+
+.NewProjectMain p{
+    margin: 5px 0;
+}
+
+.inputText{
+    width: 100%;
+    height: 28px;
+    padding: 8px 12px;
+    border-radius: 8px; 
+    box-sizing: border-box;
+    margin-bottom: 5px;
+
+}
+
+.textAreaText {
+   width: 100%;
+   min-height: 80px;
+   resize: vertical;
+   border-radius: 8px;
+}
+
+.NewProjectMain {
+    margin-bottom:10px;
+}
+
+
+.buttonContainer {
+    display: flex;
+    justify-content: center; 
+    gap: 1em;
+}
+
+.buttonContainer button {
+    padding: 7px 60px;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+
+.buttonContainer button:hover {
+    background-color: #E7E7E7 ;
+}
+
+.emptyCard{
+    background-color: white;
+    height: 220px;
+    width: 180px;
+    border-radius: 20px;
+    display: flex;
+    flex-shrink: 0;
+    flex-grow: 0;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.newProjectComand::-webkit-scrollbar {
+    height: 20px; 
+}
+
+.newProjectComand::-webkit-scrollbar-thumb {
+    background: var(--purple);
+    border-radius: 15px;
+} 
+
+.newProjectComand::-webkit-scrollbar-track{
+    border-radius: 15px;
+    background-color: var(--grey-back);
+
+}
+
+
+.popup-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    font-size: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s;
+}

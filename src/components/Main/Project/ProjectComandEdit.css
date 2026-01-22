@@ -1,0 +1,19 @@
+.comandTitle{
+    margin-bottom: 10px;
+}
+
+.newProjectComand{
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 15px;
+    background-color: #F0F1F2;
+    display: flex;
+    border-radius: 15px;
+    gap: 20px;
+    min-height: 200px;
+    max-height: 280px;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: center;
+}

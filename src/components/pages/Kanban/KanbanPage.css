@@ -1,0 +1,80 @@
+.kanbanContent{
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+}
+
+.projectHeader{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+.columnNames{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: .7em;
+}
+
+.kanbanColumn{
+    background-color: var(--grey-back);
+    padding: 1em;
+    border-radius: 1em;
+    width: 100%;
+}
+
+.tasksContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.new-task-btn{
+    color: var(--grey-font);
+    transition: .3s all;
+
+}
+
+.new-task-btn:hover{
+    color:var(--purple);
+    
+}
+
+
+/* Стили при перетаскивании */
+.kanbanColumn.drag-over {
+  background: #e3f2fd;
+  border: 2px dashed #2196f3;
+}
+
+.taskContainer {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: grab;
+}
+
+.taskContainer:active {
+  cursor: grabbing;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Стиль для перетаскиваемого элемента */
+.taskContainer.dragging {
+  opacity: 0.5;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* Кнопка создания задачи */
+.create-task-btn {
+  margin-left: 10px;
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.create-task-btn:hover {
+  background: #45a049;
+}

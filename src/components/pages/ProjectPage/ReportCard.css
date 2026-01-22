@@ -1,0 +1,20 @@
+.reportCardContainer{
+    background-color: white;
+    padding: 20px;
+    border-radius: 30px;
+}
+
+.reportCardHeader{
+    display: flex;
+    justify-content: space-between;
+}
+
+.reportCardHeaderText{
+    display: flex;
+    gap: 20px;
+}
+
+.reportCardBtns{
+    display: flex;
+    gap: 20px;
+}

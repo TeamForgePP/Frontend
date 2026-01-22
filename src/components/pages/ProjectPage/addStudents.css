@@ -1,0 +1,208 @@
+.addStudentsContainer{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 45px;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: block;
+    border-radius: 45px;
+    overflow: hidden; 
+    width: 70vw;
+}
+
+.addStudentsContent  {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.studentsList{
+    display: flex;
+    flex-direction: column;
+
+}
+
+.addStudent{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.studentsSelection {
+  display: flex;
+  gap: 30px;
+  margin: 20px 0;
+  flex: 1;
+}
+
+.availableStudents,
+.selectedStudentInfo {
+  flex: 1;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--main-shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.availableStudents h3,
+.selectedStudentInfo h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.studentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 300px;
+  padding-right: 5px;
+}
+
+.student-item {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-item:hover {
+  background: var(--grey-back);
+  border-color: #555;
+}
+
+.student-item.selected {
+  background: var(--grey-back);
+  border-color: #555;
+}
+
+.rolesSelection {
+  margin-top: 20px;
+}
+
+.rolesSelection h4 {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.rolesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.role-item {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.role-item:hover {
+  border-color: #320167;;
+}
+
+.role-item.selected {
+  background: var(--purple);
+  color: white;
+}
+
+.inviteSection {
+  margin-top: auto;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.invite-btn {
+  background:var(--purple);
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+.invite-btn:hover:not(:disabled) {
+  background: #320167;
+}
+
+.invite-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.noStudentSelected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #999;
+  font-style: italic;
+  flex: 1;
+}
+
+.addStudentsFooter {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.refresh-btn{
+    margin-bottom: 5px;
+}
+
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.selectedStudentHeader p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Стили для скроллбара */
+.studentsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.studentsList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.studentsList::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.studentsList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

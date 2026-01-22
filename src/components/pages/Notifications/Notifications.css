@@ -1,0 +1,76 @@
+.notificationsContainer{
+    max-height: 500px;
+    width: 30vw;
+    min-width: 350px;
+    background-color: var(--grey-back);
+    box-shadow: var( --main-shadow);
+    z-index: 9999;
+    position: absolute;
+    right: 15px;
+    top: 80px; 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.notificationsHeader{
+    background-color: white;
+    box-shadow: 0px 4px 8px -4px rgba(34, 60, 80, 0.2);
+    display: flex;
+    justify-content: right;
+    
+}
+
+.notificationsHeader button{
+    background-color: transparent;
+    padding: 5px;
+}
+
+.notificationsList{
+    overflow-y: auto;
+}
+
+.notification{
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.notificationHeader{
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.notificationCircle{
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background-color: #372579;
+    margin-right: 5px;
+}
+
+.newTask{
+    background-color: #14AE5C;
+}
+
+.invation{
+    background-color: #68A5E2;
+}
+
+.deadline{
+    background-color: #FF1010;
+}
+
+.notificationFooter{
+    display: flex;
+    justify-content: right;
+    margin-top: 10px;
+}
+
+.empty, .loading{
+    text-align: center;
+    padding: 1em 0;
+}
